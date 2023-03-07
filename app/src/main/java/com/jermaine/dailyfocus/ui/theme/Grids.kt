@@ -4,7 +4,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 class Grids(
-    val grid8: Dp = 16.dp,
+    val grid8: Dp = 8.dp,
     val grid16: Dp = 16.dp,
     val grid24: Dp = 24.dp,
     val grid32: Dp = 32.dp,
