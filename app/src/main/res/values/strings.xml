@@ -3,4 +3,8 @@
     <string name="back">Back</string>
     <string name="next">Next</string>
     <string name="get_started">Get started</string>
+    <string name="onboarding_page1_title">Start fresh every day</string>
+    <string name="onboarding_page2_title">Set your goals for the day</string>
+    <string name="onboarding_page3_title">Set the time you want to work on your tasks</string>
+    <string name="onboarding_page1_description">Your to-do list will be cleared every 12 midnight to prepare for a new day</string>
 </resources>

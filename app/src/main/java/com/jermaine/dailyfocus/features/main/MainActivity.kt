@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.google.accompanist.pager.ExperimentalPagerApi
 import com.jermaine.dailyfocus.features.onboarding.OnboardingScreen
 import com.jermaine.dailyfocus.ui.theme.DailyFocusTheme
 import com.jermaine.dailyfocus.util.NAVIGATION_HOME
@@ -21,6 +22,7 @@ import com.jermaine.dailyfocus.util.PREF_IS_ONBOARDED
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
+@ExperimentalPagerApi
 @ExperimentalMaterial3Api
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
