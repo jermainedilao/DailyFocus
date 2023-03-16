@@ -10,10 +10,13 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavOptionsBuilder
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navOptions
 import com.google.accompanist.pager.ExperimentalPagerApi
+import com.jermaine.dailyfocus.features.home.HomeScreen
 import com.jermaine.dailyfocus.features.onboarding.OnboardingScreen
 import com.jermaine.dailyfocus.ui.theme.DailyFocusTheme
 import com.jermaine.dailyfocus.util.NAVIGATION_HOME
@@ -57,10 +60,21 @@ class MainActivity : ComponentActivity() {
 
         NavHost(navController = navController, startDestination = startDestination) {
             composable(NAVIGATION_ONBOARDING) {
-                OnboardingScreen()
+                OnboardingScreen {
+                    sharedPreferences.edit().putBoolean(PREF_IS_ONBOARDED, true).apply()
+
+                    navController.navigate(
+                        NAVIGATION_HOME,
+                        navOptions {
+                            popUpTo(NAVIGATION_ONBOARDING) {
+                                inclusive = true
+                            }
+                        }
+                    )
+                }
             }
             composable(NAVIGATION_HOME) {
-
+                HomeScreen()
             }
         }
     }

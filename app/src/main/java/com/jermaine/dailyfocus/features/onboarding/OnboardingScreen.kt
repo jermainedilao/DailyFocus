@@ -30,7 +30,9 @@ import kotlinx.coroutines.launch
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @ExperimentalMaterial3Api
 @Composable
-fun OnboardingScreen() {
+fun OnboardingScreen(
+    onNavigateToMainScreen: () -> Unit,
+) {
     Scaffold {
         Column(
             modifier = Modifier
@@ -67,7 +69,7 @@ fun OnboardingScreen() {
                     Text(
                         text = stringResource(id = R.string.back).uppercase(),
                         style = MaterialTheme.typography.labelLarge,
-                        color = if (pagerState.currentPage > 0) {
+                        color = if (pagerState.targetPage > 0) {
                             Primary
                         } else {
                             Primary200
@@ -77,14 +79,16 @@ fun OnboardingScreen() {
                 TextButton(
                     onClick = {
                         coroutineScope.launch {
-                            if (pagerState.currentPage < ONBOARDING_PAGE_COUNT - 1) {
-                                pagerState.animateScrollToPage(pagerState.currentPage + 1)
+                            if (pagerState.targetPage < ONBOARDING_PAGE_COUNT - 1) {
+                                pagerState.animateScrollToPage(pagerState.targetPage + 1)
+                            } else {
+                                onNavigateToMainScreen.invoke()
                             }
                         }
                     },
                 ) {
                     Text(
-                        text = if (pagerState.currentPage == ONBOARDING_PAGE_COUNT - 1) {
+                        text = if (pagerState.targetPage == ONBOARDING_PAGE_COUNT - 1) {
                             stringResource(id = R.string.get_started).uppercase()
                         } else {
                             stringResource(id = R.string.next).uppercase()
@@ -198,7 +202,7 @@ private fun PageIndicators(page: Int) {
 @Composable
 fun DefaultPreview() {
     DailyFocusTheme {
-        OnboardingScreen()
+        OnboardingScreen {}
     }
 }
 
