@@ -20,8 +20,9 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import com.jermaine.dailyfocus.R
-import com.jermaine.dailyfocus.ui.composables.Body2
-import com.jermaine.dailyfocus.ui.composables.Headline6
+import com.jermaine.dailyfocus.ui.composables.Body2Text
+import com.jermaine.dailyfocus.ui.composables.ButtonText
+import com.jermaine.dailyfocus.ui.composables.Headline6Text
 import com.jermaine.dailyfocus.ui.theme.*
 import com.jermaine.dailyfocus.util.ONBOARDING_PAGE_COUNT
 import kotlinx.coroutines.launch
@@ -66,9 +67,8 @@ fun OnboardingScreen(
                     },
                     enabled = pagerState.currentPage > 0
                 ) {
-                    Text(
-                        text = stringResource(id = R.string.back).uppercase(),
-                        style = MaterialTheme.typography.labelLarge,
+                    ButtonText(
+                        text = stringResource(id = R.string.action_back),
                         color = if (pagerState.targetPage > 0) {
                             Primary
                         } else {
@@ -87,13 +87,12 @@ fun OnboardingScreen(
                         }
                     },
                 ) {
-                    Text(
+                    ButtonText(
                         text = if (pagerState.targetPage == ONBOARDING_PAGE_COUNT - 1) {
-                            stringResource(id = R.string.get_started).uppercase()
+                            stringResource(id = R.string.action_get_started)
                         } else {
-                            stringResource(id = R.string.next).uppercase()
+                            stringResource(id = R.string.action_next)
                         },
-                        style = MaterialTheme.typography.labelLarge,
                         color = Primary,
                     )
                 }
@@ -130,11 +129,11 @@ private fun OnboardingPage(
         Spacer(modifier = Modifier.height(MaterialTheme.grids.grid24))
         PageIndicators(page = page)
         Spacer(modifier = Modifier.height(MaterialTheme.grids.grid32))
-        Headline6(
+        Headline6Text(
             text = when (page) {
-                0 -> stringResource(id = R.string.onboarding_page1_title)
-                1 -> stringResource(id = R.string.onboarding_page2_title)
-                2 -> stringResource(id = R.string.onboarding_page3_title)
+                0 -> stringResource(id = R.string.title_onboarding_page1)
+                1 -> stringResource(id = R.string.title_onboarding_page2)
+                2 -> stringResource(id = R.string.title_onboarding_page3)
                 else -> {
                     throw IllegalArgumentException("Invalid $page!")
                 }
@@ -142,9 +141,9 @@ private fun OnboardingPage(
             textAlign = TextAlign.Center,
         )
         Spacer(modifier = Modifier.height(MaterialTheme.grids.grid8))
-        Body2(
+        Body2Text(
             text = when (page) {
-                0 -> stringResource(id = R.string.onboarding_page1_description)
+                0 -> stringResource(id = R.string.subtitle_onboarding_page1)
                 else -> ""
             },
             textAlign = TextAlign.Center,
@@ -200,7 +199,7 @@ private fun PageIndicators(page: Int) {
 @ExperimentalMaterial3Api
 @Preview(showBackground = true)
 @Composable
-fun DefaultPreview() {
+private fun DefaultPreview() {
     DailyFocusTheme {
         OnboardingScreen {}
     }
@@ -209,7 +208,7 @@ fun DefaultPreview() {
 @ExperimentalMaterial3Api
 @Preview(showBackground = true)
 @Composable
-fun OnboardingPagePreview() {
+private fun OnboardingPagePreview() {
     DailyFocusTheme {
         OnboardingPage(
             page = 0,

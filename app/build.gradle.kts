@@ -56,9 +56,9 @@ android {
 
 dependencies {
     implementation(libs.bundles.compose)
+    implementation(libs.bundles.accompanist)
     implementation(libs.bundles.coroutines)
 
-    implementation(libs.accompanist.pager)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.hilt)
