@@ -34,6 +34,7 @@ import kotlinx.coroutines.launch
 fun OnboardingScreen(
     onNavigateToMainScreen: () -> Unit,
 ) {
+    // TODO: Create state holder to store logic of onboarding pages (first or last page states)
     Scaffold {
         Column(
             modifier = Modifier

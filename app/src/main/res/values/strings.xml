@@ -9,4 +9,5 @@
     <string name="subtitle_onboarding_page1">Your to-do list will be cleared every 12 midnight to prepare for a new day</string>
     <string name="title_home_empty">Keep track of the things you need to do today.</string>
     <string name="action_add_a_task">Add a task</string>
+    <string name="title_things_to_do">Things to do</string>
 </resources>

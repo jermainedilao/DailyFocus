@@ -73,7 +73,9 @@ class MainActivity : ComponentActivity() {
                 }
             }
             composable(NAVIGATION_HOME) {
-                HomeScreen()
+                HomeScreen {
+                    // TODO: Navigate to Add Task screen
+                }
             }
         }
     }

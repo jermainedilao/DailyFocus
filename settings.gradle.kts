@@ -15,3 +15,4 @@ dependencyResolutionManagement {
 }
 rootProject.name = "DailyFocus"
 include(":app")
+include(":domain")

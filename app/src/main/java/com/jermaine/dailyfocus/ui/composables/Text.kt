@@ -28,6 +28,22 @@ fun Headline6Text(
 }
 
 @Composable
+fun Body1Text(
+    text: String,
+    modifier: Modifier = Modifier,
+    color: Color = Dark,
+    textAlign: TextAlign? = null,
+) {
+    Text(
+        text = text,
+        style = MaterialTheme.typography.bodyLarge,
+        color = color,
+        modifier = modifier,
+        textAlign = textAlign,
+    )
+}
+
+@Composable
 fun Body2Text(
     text: String,
     modifier: Modifier = Modifier,
@@ -80,6 +96,14 @@ fun OverlineText(
 private fun Headline6Preview() {
     DailyFocusTheme {
         Headline6Text(text = "Headline6")
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun Body1Preview() {
+    DailyFocusTheme {
+        Body1Text(text = "Body1")
     }
 }
 

@@ -58,10 +58,11 @@ dependencies {
     implementation(libs.bundles.compose)
     implementation(libs.bundles.accompanist)
     implementation(libs.bundles.coroutines)
+    implementation(libs.bundles.androidx.lifecycle)
 
     implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.hilt)
+    implementation(libs.hilt.navigation.compose)
     kapt(libs.hilt.compiler)
 
     testImplementation(libs.test.junit)
@@ -69,6 +70,8 @@ dependencies {
 
     debugImplementation(libs.compose.ui.tooling)
     debugImplementation(libs.test.compose.ui.manifest)
+
+    implementation(project(":domain"))
 }
 
 // Allow references to generated code
