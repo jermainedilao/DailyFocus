@@ -2,20 +2,23 @@ package com.jermaine.dailyfocus.features.home
 
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.viewModelScope
 import com.jermaine.dailyfocus.core.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.launch
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 @ExperimentalCoroutinesApi
 @HiltViewModel
-class HomeModel @Inject constructor(
+class HomeViewModel @Inject constructor(
     interactor: HomeInteractor
 ) : BaseViewModel<HomeAction, HomeResult, HomeUiState>(interactor),
     DefaultLifecycleObserver {
+
+    private val dateTimeFormatter by lazy {
+        DateTimeFormatter.ofPattern("h:mm a")
+    }
+
     override val defaultState: HomeUiState
         get() = HomeUiState(
             todoList = emptyList(),
@@ -31,12 +34,12 @@ class HomeModel @Inject constructor(
                         TodoUiModel(
                             id = item.id,
                             title = item.title,
-                            dueDisplayText = item.due.format(
-                                DateTimeFormatter.ofPattern("h:mm a")
-                            )
+                            dueDisplayText = item.due.format(dateTimeFormatter),
+                            completed = item.completed
                         )
                     },
                     isFirstOpen = false,
+                    isLoading = false,
                 )
                 HomeResult.LoadingFinished -> prevState.copy(
                     isLoading = false
@@ -48,8 +51,10 @@ class HomeModel @Inject constructor(
         }
 
     override fun onCreate(owner: LifecycleOwner) {
-        viewModelScope.launch {
-            postAction(HomeAction.LoadTodoList)
-        }
+        postAction(HomeAction.LoadTodoList)
+    }
+
+    fun onItemComplete(id: Int) {
+        postAction(HomeAction.CompleteItem(id))
     }
 }

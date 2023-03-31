@@ -22,8 +22,10 @@ import com.jermaine.dailyfocus.util.NAVIGATION_HOME
 import com.jermaine.dailyfocus.util.NAVIGATION_ONBOARDING
 import com.jermaine.dailyfocus.util.PREF_IS_ONBOARDED
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import javax.inject.Inject
 
+@ExperimentalCoroutinesApi
 @ExperimentalPagerApi
 @ExperimentalMaterial3Api
 @AndroidEntryPoint

@@ -10,6 +10,8 @@ data class HomeUiState(
 
 sealed class HomeAction {
     object LoadTodoList : HomeAction()
+
+    data class CompleteItem(val id: Int) : HomeAction()
 }
 
 sealed class HomeResult {
@@ -23,7 +25,8 @@ sealed class HomeResult {
 }
 
 data class TodoUiModel(
-    val id: Long,
+    val id: Int,
     val title: String,
     val dueDisplayText: String,
+    val completed: Boolean
 )
