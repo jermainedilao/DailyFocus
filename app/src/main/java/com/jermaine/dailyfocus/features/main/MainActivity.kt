@@ -15,9 +15,11 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import com.google.accompanist.pager.ExperimentalPagerApi
+import com.jermaine.dailyfocus.features.addtask.AddTaskScreen
 import com.jermaine.dailyfocus.features.home.HomeScreen
 import com.jermaine.dailyfocus.features.onboarding.OnboardingScreen
 import com.jermaine.dailyfocus.ui.theme.DailyFocusTheme
+import com.jermaine.dailyfocus.util.NAVIGATION_ADD_TASK
 import com.jermaine.dailyfocus.util.NAVIGATION_HOME
 import com.jermaine.dailyfocus.util.NAVIGATION_ONBOARDING
 import com.jermaine.dailyfocus.util.PREF_IS_ONBOARDED
@@ -76,8 +78,20 @@ class MainActivity : ComponentActivity() {
             }
             composable(NAVIGATION_HOME) {
                 HomeScreen {
-                    // TODO: Navigate to Add Task screen
+                    navController.navigate(
+                        NAVIGATION_ADD_TASK,
+                    )
                 }
+            }
+            composable(NAVIGATION_ADD_TASK) {
+                AddTaskScreen(
+                    onAddTaskCompleteListener = {
+                        navController.navigateUp()
+                    },
+                    onCloseClickListener = {
+                        navController.navigateUp()
+                    }
+                )
             }
         }
     }

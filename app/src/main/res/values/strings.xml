@@ -10,4 +10,10 @@
     <string name="title_home_empty">Keep track of the things you need to do today.</string>
     <string name="action_add_a_task">Add a task</string>
     <string name="title_things_to_do">Things to do</string>
+    <string name="action_save">Save</string>
+    <string name="hint_task_title">Enter task title</string>
+    <string name="hint_set_time">Set time</string>
+    <string name="title_select_time">Select time</string>
+    <string name="action_set">Set</string>
+    <string name="action_cancel">Cancel</string>
 </resources>

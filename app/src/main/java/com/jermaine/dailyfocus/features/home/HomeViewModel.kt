@@ -3,9 +3,9 @@ package com.jermaine.dailyfocus.features.home
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import com.jermaine.dailyfocus.core.BaseViewModel
+import com.jermaine.dailyfocus.util.TIME_FORMATTER
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 @ExperimentalCoroutinesApi
@@ -14,10 +14,6 @@ class HomeViewModel @Inject constructor(
     interactor: HomeInteractor
 ) : BaseViewModel<HomeAction, HomeResult, HomeUiState>(interactor),
     DefaultLifecycleObserver {
-
-    private val dateTimeFormatter by lazy {
-        DateTimeFormatter.ofPattern("h:mm a")
-    }
 
     override val defaultState: HomeUiState
         get() = HomeUiState(
@@ -34,16 +30,18 @@ class HomeViewModel @Inject constructor(
                         TodoUiModel(
                             id = item.id,
                             title = item.title,
-                            dueDisplayText = item.due.format(dateTimeFormatter),
+                            dueDisplayText = item.due.format(TIME_FORMATTER),
                             completed = item.completed
                         )
                     },
                     isFirstOpen = false,
                     isLoading = false,
                 )
+
                 HomeResult.LoadingFinished -> prevState.copy(
                     isLoading = false
                 )
+
                 HomeResult.LoadingStarted -> prevState.copy(
                     isLoading = true
                 )

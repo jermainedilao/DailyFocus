@@ -1,10 +1,10 @@
 package com.jermaine.dailyfocus.domain.models
 
-import java.time.LocalDateTime
+import java.time.LocalTime
 
 data class Todo(
     val id: Int,
     val title: String,
-    val due: LocalDateTime,
+    val due: LocalTime,
     val completed: Boolean,
 )
