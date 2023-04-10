@@ -71,6 +71,7 @@ dependencies {
     debugImplementation(libs.compose.ui.tooling)
     debugImplementation(libs.test.compose.ui.manifest)
 
+    implementation(project(":data"))
     implementation(project(":domain"))
 }
 

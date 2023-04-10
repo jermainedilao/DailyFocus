@@ -21,7 +21,7 @@ class HomeViewModel @Inject constructor(
 
     override val defaultState: HomeUiState
         get() = HomeUiState(
-            todoList = emptyList(),
+            items = emptyList(),
             isLoading = false,
             isFirstOpen = true
         )
@@ -30,7 +30,7 @@ class HomeViewModel @Inject constructor(
         { prevState, result ->
             when (result) {
                 is HomeResult.TodoListLoaded -> prevState.copy(
-                    todoList = result.todoList.map { item ->
+                    items = result.todoList.map { item ->
                         TodoUiModel(
                             id = item.id,
                             title = item.title,

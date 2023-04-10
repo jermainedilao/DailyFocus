@@ -44,7 +44,7 @@ fun HomeScreen(
     }
 
     Scaffold(
-        topBar = { HomeScreenTopAppBar(state.todoList, state.isLoading, date) }
+        topBar = { HomeScreenTopAppBar(state.items, state.isLoading, date) }
     ) { padding ->
         HomeScreenContent(
             modifier = Modifier
@@ -69,7 +69,7 @@ private fun HomeScreenContent(
 ) {
     Box(modifier = modifier) {
         ContentLinearProgressIndicator(isLoading = state.isLoading)
-        if (state.todoList.isEmpty() && !state.isLoading && !state.isFirstOpen) {
+        if (state.items.isEmpty() && !state.isLoading && !state.isFirstOpen) {
             HomeEmptyState(
                 modifier = Modifier
                     .fillMaxSize()
@@ -82,7 +82,7 @@ private fun HomeScreenContent(
         } else {
             TodoList(
                 modifier = Modifier.fillMaxSize(),
-                items = state.todoList,
+                items = state.items,
                 onItemCompleteClick = onItemCompleteClick,
             )
         }

@@ -3,7 +3,7 @@ package com.jermaine.dailyfocus.features.home
 import com.jermaine.dailyfocus.domain.models.Todo
 
 data class HomeUiState(
-    val todoList: List<TodoUiModel>,
+    val items: List<TodoUiModel>,
     val isLoading: Boolean,
     val isFirstOpen: Boolean,
 )
