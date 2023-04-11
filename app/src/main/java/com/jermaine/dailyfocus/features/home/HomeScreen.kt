@@ -61,9 +61,10 @@ import com.jermaine.dailyfocus.util.DATETIME_FORMATTER_DAY_MONTH_YEAR
 import com.jermaine.dailyfocus.util.observeLifecycle
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import java.time.LocalDate
+import java.util.UUID
 
 private typealias OnAddTaskClickListener = () -> Unit
-private typealias OnItemCompleteClickListener = (id: Int) -> Unit
+private typealias OnItemCompleteClickListener = (id: UUID) -> Unit
 
 @ExperimentalCoroutinesApi
 @ExperimentalMaterial3Api
@@ -332,19 +333,19 @@ private fun DefaultPreview() {
 
 private fun previewData() = listOf(
     TodoUiModel(
-        id = 1,
+        id = UUID.randomUUID(),
         title = "Wash the dishes",
         dueDisplayText = "9:00 AM",
         completed = true,
     ),
     TodoUiModel(
-        id = 2,
+        id = UUID.randomUUID(),
         title = "Do laundry",
         dueDisplayText = "9:00 AM",
         completed = false,
     ),
     TodoUiModel(
-        id = 3,
+        id = UUID.randomUUID(),
         title = "Walk the dog",
         dueDisplayText = "9:00 AM",
         completed = false,

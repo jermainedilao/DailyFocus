@@ -1,12 +1,12 @@
 package com.jermaine.dailyfocus.data
 
 import com.jermaine.dailyfocus.domain.models.Todo
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onStart
+import java.time.LocalTime
+import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -34,18 +34,17 @@ class TodoRepository @Inject constructor() {
 //                completed = false,
 //            )
 //        )
-        emptyMap<Int, Todo>()
+        emptyMap<UUID, Todo>()
     )
 
     fun observe(): Flow<List<Todo>> =
         items
             .asStateFlow()
-            .onStart { delay(1500) }
             .map { it.values.toList().sortedBy { item -> item.due } }
 
-    fun completeTodo(id: Int) {
+    fun completeTodo(id: UUID) {
         items.value[id]?.let { item ->
-            val newItems = mutableMapOf<Int, Todo>().apply {
+            val newItems = mutableMapOf<UUID, Todo>().apply {
                 putAll(items.value)
             }
             newItems[id] = item.copy(
@@ -55,9 +54,17 @@ class TodoRepository @Inject constructor() {
         }
     }
 
-    fun addTodo(todo: Todo) {
-        items.value = mutableMapOf<Int, Todo>().apply {
+    fun addTodo(title: String, due: LocalTime) {
+        items.value = mutableMapOf<UUID, Todo>().apply {
             putAll(items.value)
+
+            val todo = Todo(
+                id = UUID.randomUUID(),
+                title = title,
+                due = due,
+                completed = false,
+            )
+
             put(todo.id, todo)
         }
     }

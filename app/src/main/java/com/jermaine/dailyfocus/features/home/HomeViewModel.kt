@@ -6,13 +6,14 @@ import com.jermaine.dailyfocus.core.BaseViewModel
 import com.jermaine.dailyfocus.util.TIME_FORMATTER
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import java.util.UUID
 import javax.inject.Inject
 
 @ExperimentalCoroutinesApi
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     interactor: HomeInteractor
-) : BaseViewModel<HomeAction, HomeResult, HomeUiState>(interactor),
+) : BaseViewModel<HomeAction, HomeResult, HomeUiState, HomeUiEvent>(interactor),
     DefaultLifecycleObserver {
 
     override val defaultState: HomeUiState
@@ -52,7 +53,9 @@ class HomeViewModel @Inject constructor(
         postAction(HomeAction.LoadTodoList)
     }
 
-    fun onItemComplete(id: Int) {
+    fun onItemComplete(id: UUID) {
         postAction(HomeAction.CompleteItem(id))
     }
+
+    override fun consumeEvent(uiEvent: HomeUiEvent) = Unit
 }

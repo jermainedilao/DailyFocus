@@ -32,12 +32,14 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardCapitalization
@@ -46,6 +48,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.jermaine.dailyfocus.R
 import com.jermaine.dailyfocus.ui.composables.Body2Text
 import com.jermaine.dailyfocus.ui.composables.ButtonText
@@ -64,13 +68,34 @@ private typealias OnCloseClickListener = () -> Unit
 private typealias OnSaveClickListener = () -> Unit
 private typealias OnTimeSetListener = (LocalTime) -> Unit
 private typealias OnDismissListener = () -> Unit
+private typealias OnTitleChangedListener = (TextFieldValue) -> Unit
 
 @ExperimentalMaterial3Api
 @Composable
 fun AddTaskScreen(
+    viewModel: AddTaskViewModel = hiltViewModel(),
     onAddTaskCompleteListener: OnAddTaskCompleteListener,
     onCloseClickListener: OnCloseClickListener,
 ) {
+    val state by viewModel.uiState.collectAsStateWithLifecycle()
+    val currentOnAddTaskCompleteListener by rememberUpdatedState(onAddTaskCompleteListener)
+
+    var titleState by remember {
+        mutableStateOf("")
+    }
+    var dueState by remember {
+        mutableStateOf<LocalTime?>(null)
+    }
+
+    state.events?.let { events ->
+        LaunchedEffect(events) {
+            events.firstOrNull { it is AddTaskUiEvent.SaveComplete }?.let {
+                currentOnAddTaskCompleteListener.invoke()
+                viewModel.consumeEvent(it)
+            }
+        }
+    }
+
     Scaffold(
         topBar = {
             AddTaskTopAppBar(
@@ -78,7 +103,15 @@ fun AddTaskScreen(
                     onCloseClickListener.invoke()
                 },
                 onSaveClickListener = {
-                    // TODO: call ViewModel.addTodo()
+                    val title = titleState
+                    val due = dueState
+
+                    if (title.isNotEmpty() && due != null) {
+                        viewModel.saveTodo(
+                            title = title,
+                            due = due
+                        )
+                    }
                 }
             )
         }
@@ -89,8 +122,11 @@ fun AddTaskScreen(
                 .padding(padding)
         ) {
             AddTaskContent(
-                onTitleChanged = {
-                    // TODO: Call viewmodel and update the value
+                onTitleChangedListener = {
+                    titleState = it.text
+                },
+                onTimeSetListener = {
+                    dueState = it
                 }
             )
         }
@@ -100,7 +136,8 @@ fun AddTaskScreen(
 @ExperimentalMaterial3Api
 @Composable
 private fun AddTaskContent(
-    onTitleChanged: (TextFieldValue) -> Unit
+    onTitleChangedListener: OnTitleChangedListener,
+    onTimeSetListener: OnTimeSetListener,
 ) {
     var showTimePicker by remember {
         mutableStateOf(false)
@@ -117,6 +154,7 @@ private fun AddTaskContent(
             },
             onTimeSetListener = { selectedTime ->
                 due = TIME_FORMATTER.format(selectedTime)
+                onTimeSetListener.invoke(selectedTime)
                 showTimePicker = false
             }
         )
@@ -125,16 +163,16 @@ private fun AddTaskContent(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(
-                horizontal = MaterialTheme.grids.grid16
-            )
+            .padding(horizontal = MaterialTheme.grids.grid16)
     ) {
         TitleTextField(
             modifier = Modifier.fillMaxWidth(),
-            onTitleChanged = onTitleChanged
+            onTitleChanged = onTitleChangedListener
         )
+
         Row(
             modifier = Modifier
+                .fillMaxWidth()
                 .clickable(
                     indication = null,
                     interactionSource = remember { MutableInteractionSource() }
@@ -346,7 +384,10 @@ fun TopAppBarPreview() {
 fun AddTaskContentPreview() {
     DailyFocusTheme {
         AddTaskContent(
-            onTitleChanged = {
+            onTitleChangedListener = {
+
+            },
+            onTimeSetListener = {
 
             }
         )

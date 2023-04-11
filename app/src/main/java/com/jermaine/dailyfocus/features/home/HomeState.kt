@@ -1,6 +1,7 @@
 package com.jermaine.dailyfocus.features.home
 
 import com.jermaine.dailyfocus.domain.models.Todo
+import java.util.UUID
 
 data class HomeUiState(
     val items: List<TodoUiModel>,
@@ -8,10 +9,12 @@ data class HomeUiState(
     val isFirstOpen: Boolean,
 )
 
+sealed class HomeUiEvent(val id: UUID)
+
 sealed class HomeAction {
     object LoadTodoList : HomeAction()
 
-    data class CompleteItem(val id: Int) : HomeAction()
+    data class CompleteItem(val id: UUID) : HomeAction()
 }
 
 sealed class HomeResult {
@@ -25,7 +28,7 @@ sealed class HomeResult {
 }
 
 data class TodoUiModel(
-    val id: Int,
+    val id: UUID,
     val title: String,
     val dueDisplayText: String,
     val completed: Boolean
