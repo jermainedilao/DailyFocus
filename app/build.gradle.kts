@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.ksp)
+    kotlin("kapt")
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.hilt)
@@ -63,7 +64,9 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.hilt)
     implementation(libs.hilt.navigation.compose)
-    ksp(libs.hilt.compiler)
+    kapt(libs.hilt.compiler)
+
+    ksp(libs.room.compiler)
 
     testImplementation(libs.test.junit)
     androidTestImplementation(libs.bundles.android.test)
@@ -73,4 +76,9 @@ dependencies {
 
     implementation(project(":data"))
     implementation(project(":domain"))
+}
+
+// Allow references to generated code
+kapt {
+    correctErrorTypes = true
 }

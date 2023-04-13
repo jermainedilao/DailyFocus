@@ -38,7 +38,7 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.hilt)
     implementation(libs.coroutines.core)
-    implementation(libs.bundles.room)
+    api(libs.bundles.room)
     ksp(libs.room.compiler)
     testImplementation(libs.test.junit)
 

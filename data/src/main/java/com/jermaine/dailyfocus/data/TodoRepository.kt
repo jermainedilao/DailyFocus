@@ -1,9 +1,10 @@
 package com.jermaine.dailyfocus.data
 
-import com.jermaine.dailyfocus.domain.model.Todo
+import com.jermaine.dailyfocus.data.local.TodoDao
+import com.jermaine.dailyfocus.data.local.model.TodoDbModel
+import com.jermaine.dailyfocus.domain.model.TodoModel
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import java.time.LocalTime
 import java.util.UUID
@@ -11,41 +12,29 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class TodoRepository @Inject constructor() {
+class TodoRepository @Inject constructor(
+    private val todoDao: TodoDao
+) {
+    fun observe(): Flow<List<TodoModel>> =
+        todoDao
+            .observeAll()
+            .distinctUntilChanged()
+            .map { it.map(TodoDbModel::toDomain) }
 
-    private val items = MutableStateFlow(
-        emptyMap<UUID, Todo>()
-    )
-
-    fun observe(): Flow<List<Todo>> =
-        items
-            .asStateFlow()
-            .map { it.values.toList().sortedBy { item -> item.due } }
-
-    fun completeTodo(id: UUID) {
-        items.value[id]?.let { item ->
-            val newItems = mutableMapOf<UUID, Todo>().apply {
-                putAll(items.value)
-            }
-            newItems[id] = item.copy(
-                completed = item.completed.not()
-            )
-            items.value = newItems
+    suspend fun completeTodo(id: UUID) {
+        val todo = todoDao.get(id.toString()).run {
+            copy(completed = completed.not())
         }
+        todoDao.update(todo)
     }
 
-    fun addTodo(title: String, due: LocalTime) {
-        items.value = mutableMapOf<UUID, Todo>().apply {
-            putAll(items.value)
-
-            val todo = Todo(
-                id = UUID.randomUUID(),
-                title = title,
-                due = due,
-                completed = false,
-            )
-
-            put(todo.id, todo)
-        }
+    suspend fun addTodo(title: String, due: LocalTime) {
+        val todo = TodoModel(
+            id = UUID.randomUUID(),
+            title = title,
+            due = due,
+            completed = false,
+        )
+        todoDao.insert(TodoDbModel.fromDomain(todo))
     }
 }

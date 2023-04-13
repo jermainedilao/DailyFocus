@@ -1,6 +1,6 @@
 [versions]
 kotlin = "1.7.20"
-ksp = "1.8.20-1.0.10"
+ksp = "1.7.20-1.0.8"
 android = "8.0.0-rc01"
 coroutines = "1.6.4"
 

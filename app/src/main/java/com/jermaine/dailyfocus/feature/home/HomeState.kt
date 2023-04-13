@@ -1,6 +1,6 @@
 package com.jermaine.dailyfocus.feature.home
 
-import com.jermaine.dailyfocus.domain.model.Todo
+import com.jermaine.dailyfocus.domain.model.TodoModel
 import java.util.UUID
 
 data class HomeUiState(
@@ -19,7 +19,7 @@ sealed class HomeAction {
 
 sealed class HomeResult {
     data class TodoListLoaded(
-        val todoList: List<Todo>
+        val todoList: List<TodoModel>
     ) : HomeResult()
 
     object LoadingStarted : HomeResult()
