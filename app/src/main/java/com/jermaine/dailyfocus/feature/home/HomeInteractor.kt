@@ -1,4 +1,4 @@
-package com.jermaine.dailyfocus.features.home
+package com.jermaine.dailyfocus.feature.home
 
 import com.jermaine.dailyfocus.core.Interactor
 import com.jermaine.dailyfocus.data.TodoRepository

@@ -1,4 +1,4 @@
-package com.jermaine.dailyfocus.domain.models
+package com.jermaine.dailyfocus.domain.model
 
 import java.time.LocalTime
 import java.util.UUID

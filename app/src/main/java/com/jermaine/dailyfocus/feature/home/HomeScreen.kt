@@ -1,4 +1,4 @@
-package com.jermaine.dailyfocus.features.home
+package com.jermaine.dailyfocus.feature.home
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -46,11 +46,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.jermaine.dailyfocus.R
-import com.jermaine.dailyfocus.ui.composables.Body1Text
-import com.jermaine.dailyfocus.ui.composables.Body2Text
-import com.jermaine.dailyfocus.ui.composables.ContentLinearProgressIndicator
-import com.jermaine.dailyfocus.ui.composables.Headline6Text
-import com.jermaine.dailyfocus.ui.composables.OverlineText
+import com.jermaine.dailyfocus.ui.composable.Body1Text
+import com.jermaine.dailyfocus.ui.composable.Body2Text
+import com.jermaine.dailyfocus.ui.composable.ContentLinearProgressIndicator
+import com.jermaine.dailyfocus.ui.composable.Headline6Text
+import com.jermaine.dailyfocus.ui.composable.OverlineText
 import com.jermaine.dailyfocus.ui.theme.DailyFocusTheme
 import com.jermaine.dailyfocus.ui.theme.Dark
 import com.jermaine.dailyfocus.ui.theme.Gray80

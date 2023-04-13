@@ -1,4 +1,4 @@
-package com.jermaine.dailyfocus.features.addtask
+package com.jermaine.dailyfocus.feature.addtask
 
 import com.jermaine.dailyfocus.core.Interactor
 import com.jermaine.dailyfocus.data.TodoRepository

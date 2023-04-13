@@ -1,4 +1,4 @@
-package com.jermaine.dailyfocus.ui.composables
+package com.jermaine.dailyfocus.ui.composable
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text

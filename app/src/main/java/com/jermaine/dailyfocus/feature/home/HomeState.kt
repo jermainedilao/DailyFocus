@@ -1,6 +1,6 @@
-package com.jermaine.dailyfocus.features.home
+package com.jermaine.dailyfocus.feature.home
 
-import com.jermaine.dailyfocus.domain.models.Todo
+import com.jermaine.dailyfocus.domain.model.Todo
 import java.util.UUID
 
 data class HomeUiState(

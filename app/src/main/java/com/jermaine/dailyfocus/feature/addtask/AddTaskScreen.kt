@@ -1,4 +1,4 @@
-package com.jermaine.dailyfocus.features.addtask
+package com.jermaine.dailyfocus.feature.addtask
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -39,7 +39,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardCapitalization
@@ -51,9 +50,9 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.jermaine.dailyfocus.R
-import com.jermaine.dailyfocus.ui.composables.Body2Text
-import com.jermaine.dailyfocus.ui.composables.ButtonText
-import com.jermaine.dailyfocus.ui.composables.Headline6Text
+import com.jermaine.dailyfocus.ui.composable.Body2Text
+import com.jermaine.dailyfocus.ui.composable.ButtonText
+import com.jermaine.dailyfocus.ui.composable.Headline6Text
 import com.jermaine.dailyfocus.ui.theme.DailyFocusTheme
 import com.jermaine.dailyfocus.ui.theme.Dark
 import com.jermaine.dailyfocus.ui.theme.Dark60

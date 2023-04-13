@@ -1,4 +1,4 @@
-package com.jermaine.dailyfocus.features.home
+package com.jermaine.dailyfocus.feature.home
 
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner

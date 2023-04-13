@@ -1,4 +1,4 @@
-package com.jermaine.dailyfocus.features.addtask
+package com.jermaine.dailyfocus.feature.addtask
 
 import com.jermaine.dailyfocus.core.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel

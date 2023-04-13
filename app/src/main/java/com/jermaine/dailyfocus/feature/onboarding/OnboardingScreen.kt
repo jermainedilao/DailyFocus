@@ -1,4 +1,4 @@
-package com.jermaine.dailyfocus.features.onboarding
+package com.jermaine.dailyfocus.feature.onboarding
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
@@ -20,9 +20,9 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import com.jermaine.dailyfocus.R
-import com.jermaine.dailyfocus.ui.composables.Body2Text
-import com.jermaine.dailyfocus.ui.composables.ButtonText
-import com.jermaine.dailyfocus.ui.composables.Headline6Text
+import com.jermaine.dailyfocus.ui.composable.Body2Text
+import com.jermaine.dailyfocus.ui.composable.ButtonText
+import com.jermaine.dailyfocus.ui.composable.Headline6Text
 import com.jermaine.dailyfocus.ui.theme.*
 import com.jermaine.dailyfocus.util.ONBOARDING_PAGE_COUNT
 import kotlinx.coroutines.launch

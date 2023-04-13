@@ -1,4 +1,4 @@
-package com.jermaine.dailyfocus.features.main
+package com.jermaine.dailyfocus.feature.main
 
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -15,9 +15,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import com.google.accompanist.pager.ExperimentalPagerApi
-import com.jermaine.dailyfocus.features.addtask.AddTaskScreen
-import com.jermaine.dailyfocus.features.home.HomeScreen
-import com.jermaine.dailyfocus.features.onboarding.OnboardingScreen
+import com.jermaine.dailyfocus.feature.addtask.AddTaskScreen
+import com.jermaine.dailyfocus.feature.home.HomeScreen
+import com.jermaine.dailyfocus.feature.onboarding.OnboardingScreen
 import com.jermaine.dailyfocus.ui.theme.DailyFocusTheme
 import com.jermaine.dailyfocus.util.NAVIGATION_ADD_TASK
 import com.jermaine.dailyfocus.util.NAVIGATION_HOME

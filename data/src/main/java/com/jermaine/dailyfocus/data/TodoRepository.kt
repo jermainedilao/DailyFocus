@@ -1,6 +1,6 @@
 package com.jermaine.dailyfocus.data
 
-import com.jermaine.dailyfocus.domain.models.Todo
+import com.jermaine.dailyfocus.domain.model.Todo
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -14,26 +14,6 @@ import javax.inject.Singleton
 class TodoRepository @Inject constructor() {
 
     private val items = MutableStateFlow(
-//        mapOf(
-//            1 to Todo(
-//                id = 1,
-//                title = "Wash the dishes",
-//                due = LocalDateTime.now(),
-//                completed = true,
-//            ),
-//            2 to Todo(
-//                id = 2,
-//                title = "Do laundry",
-//                due = LocalDateTime.now(),
-//                completed = false,
-//            ),
-//            3 to Todo(
-//                id = 3,
-//                title = "Walk the dog",
-//                due = LocalDateTime.now(),
-//                completed = false,
-//            )
-//        )
         emptyMap<UUID, Todo>()
     )
 

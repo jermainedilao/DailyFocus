@@ -1,6 +1,7 @@
 plugins {
-    id("com.android.library")
-    id("org.jetbrains.kotlin.android")
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.android)
 }
 
 android {
@@ -37,6 +38,8 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.hilt)
     implementation(libs.coroutines.core)
+    implementation(libs.bundles.room)
+    ksp(libs.room.compiler)
     testImplementation(libs.test.junit)
 
     implementation(project(":domain"))

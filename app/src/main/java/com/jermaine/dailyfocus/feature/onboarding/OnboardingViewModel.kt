@@ -1,4 +1,4 @@
-package com.jermaine.dailyfocus.features.onboarding
+package com.jermaine.dailyfocus.feature.onboarding
 
 import androidx.lifecycle.ViewModel
 
