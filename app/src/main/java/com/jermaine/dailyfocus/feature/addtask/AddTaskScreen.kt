@@ -54,10 +54,6 @@ import com.jermaine.dailyfocus.ui.composable.Body2Text
 import com.jermaine.dailyfocus.ui.composable.ButtonText
 import com.jermaine.dailyfocus.ui.composable.Headline6Text
 import com.jermaine.dailyfocus.ui.theme.DailyFocusTheme
-import com.jermaine.dailyfocus.ui.theme.Dark
-import com.jermaine.dailyfocus.ui.theme.Dark60
-import com.jermaine.dailyfocus.ui.theme.Primary
-import com.jermaine.dailyfocus.ui.theme.White
 import com.jermaine.dailyfocus.ui.theme.grids
 import com.jermaine.dailyfocus.util.TIME_FORMATTER
 import java.time.LocalTime
@@ -195,9 +191,9 @@ private fun AddTaskContent(
                     stringResource(id = R.string.hint_set_time)
                 },
                 color = if (due.isEmpty()) {
-                    Dark60
+                    MaterialTheme.colorScheme.onSurfaceVariant
                 } else {
-                    Dark
+                    MaterialTheme.colorScheme.onBackground
                 }
             )
         }
@@ -228,7 +224,7 @@ private fun TimePickerDialog(
         Column(
             modifier = Modifier
                 .background(
-                    color = White,
+                    color = MaterialTheme.colorScheme.surface,
                     shape = RoundedCornerShape(16.dp)
                 )
                 .padding(MaterialTheme.grids.grid24)
@@ -248,7 +244,7 @@ private fun TimePickerDialog(
                 ) {
                     ButtonText(
                         text = stringResource(id = R.string.action_cancel),
-                        color = Primary
+                        color = MaterialTheme.colorScheme.primary
                     )
                 }
                 TextButton(
@@ -263,7 +259,7 @@ private fun TimePickerDialog(
                 ) {
                     ButtonText(
                         text = stringResource(id = R.string.action_set),
-                        color = Primary
+                        color = MaterialTheme.colorScheme.primary
                     )
                 }
             }
@@ -315,7 +311,7 @@ private fun TitleTextField(
         placeholder = {
             Headline6Text(
                 text = stringResource(id = R.string.hint_task_title),
-                color = Dark60
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         },
         keyboardOptions = KeyboardOptions.Default.copy(
@@ -353,7 +349,7 @@ private fun AddTaskTopAppBar(
                 ) {
                     ButtonText(
                         text = stringResource(id = R.string.action_save),
-                        color = Primary
+                        color = MaterialTheme.colorScheme.primary
                     )
                 }
             }

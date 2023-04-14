@@ -8,14 +8,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import com.jermaine.dailyfocus.ui.theme.DailyFocusTheme
-import com.jermaine.dailyfocus.ui.theme.Dark
-import com.jermaine.dailyfocus.ui.theme.Dark60
 
 @Composable
 fun Headline6Text(
     text: String,
     modifier: Modifier = Modifier,
-    color: Color = Dark,
+    color: Color = MaterialTheme.colorScheme.onBackground,
     textAlign: TextAlign? = null,
 ) {
     Text(
@@ -31,7 +29,7 @@ fun Headline6Text(
 fun Body1Text(
     text: String,
     modifier: Modifier = Modifier,
-    color: Color = Dark,
+    color: Color = MaterialTheme.colorScheme.onBackground,
     textAlign: TextAlign? = null,
 ) {
     Text(
@@ -47,7 +45,7 @@ fun Body1Text(
 fun Body2Text(
     text: String,
     modifier: Modifier = Modifier,
-    color: Color = Dark60,
+    color: Color = MaterialTheme.colorScheme.onBackground,
     textAlign: TextAlign? = null,
 ) {
     Text(
@@ -63,7 +61,7 @@ fun Body2Text(
 fun ButtonText(
     text: String,
     modifier: Modifier = Modifier,
-    color: Color = Dark60,
+    color: Color = MaterialTheme.colorScheme.onBackground,
     textAlign: TextAlign? = null,
 ) {
     Text(
@@ -79,7 +77,7 @@ fun ButtonText(
 fun OverlineText(
     text: String,
     modifier: Modifier = Modifier,
-    color: Color = Dark60,
+    color: Color = MaterialTheme.colorScheme.onBackground,
     textAlign: TextAlign? = null,
 ) {
     Text(

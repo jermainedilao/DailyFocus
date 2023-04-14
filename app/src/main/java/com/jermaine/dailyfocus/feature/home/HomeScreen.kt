@@ -15,6 +15,10 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.BottomAppBarDefaults
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -22,6 +26,11 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.FloatingActionButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalMinimumInteractiveComponentEnforcement
 import androidx.compose.material3.LocalMinimumTouchTargetEnforcement
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -36,6 +45,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -52,10 +63,6 @@ import com.jermaine.dailyfocus.ui.composable.ContentLinearProgressIndicator
 import com.jermaine.dailyfocus.ui.composable.Headline6Text
 import com.jermaine.dailyfocus.ui.composable.OverlineText
 import com.jermaine.dailyfocus.ui.theme.DailyFocusTheme
-import com.jermaine.dailyfocus.ui.theme.Dark
-import com.jermaine.dailyfocus.ui.theme.Gray80
-import com.jermaine.dailyfocus.ui.theme.Primary
-import com.jermaine.dailyfocus.ui.theme.White
 import com.jermaine.dailyfocus.ui.theme.grids
 import com.jermaine.dailyfocus.util.DATETIME_FORMATTER_DAY_MONTH_YEAR
 import com.jermaine.dailyfocus.util.observeLifecycle
@@ -80,7 +87,12 @@ fun HomeScreen(
     }
 
     Scaffold(
-        topBar = { HomeScreenTopAppBar(state.items, state.isLoading, date) }
+        topBar = { HomeScreenTopAppBar(state.items, state.isLoading, date) },
+        bottomBar = {
+            if (state.items.isNotEmpty()) {
+                HomeScreenBottomAppBar(onAddTaskClick)
+            }
+        }
     ) { padding ->
         HomeScreenContent(
             modifier = Modifier
@@ -92,6 +104,34 @@ fun HomeScreen(
             onItemCompleteClick = viewModel::onItemComplete
         )
     }
+}
+
+@Composable
+fun HomeScreenBottomAppBar(
+    onAddTaskClick: OnAddTaskClickListener
+) {
+    BottomAppBar(
+        actions = {
+            IconButton(onClick = { /*TODO*/ }) {
+                Icon(
+                    painterResource(id = R.drawable.ic_archive),
+                    "Archives"
+                )
+            }
+        },
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = { onAddTaskClick.invoke() },
+                containerColor = BottomAppBarDefaults.bottomAppBarFabColor,
+                elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation()
+            ) {
+                Icon(
+                    Icons.Filled.Add,
+                    "Add"
+                )
+            }
+        }
+    )
 }
 
 @ExperimentalMaterial3Api
@@ -135,7 +175,7 @@ private fun TodoList(
     LazyColumn(
         modifier = modifier,
         contentPadding = PaddingValues(16.dp, 8.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         items(items) { item ->
             TodoItem(item, onItemCompleteClick)
@@ -157,10 +197,9 @@ private fun TodoItem(
         modifier = Modifier
             .fillMaxWidth()
             .clickable { },
-        elevation = CardDefaults.cardElevation(8.dp),
-        shape = RoundedCornerShape(4.dp),
+        shape = RoundedCornerShape(10.dp),
         colors = CardDefaults.cardColors(
-            containerColor = White
+            containerColor = MaterialTheme.colorScheme.secondaryContainer
         )
     ) {
         Row(
@@ -170,17 +209,17 @@ private fun TodoItem(
             verticalAlignment = Alignment.Top,
             horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.Start)
         ) {
-            CompositionLocalProvider(LocalMinimumTouchTargetEnforcement provides false) {
+            CompositionLocalProvider(LocalMinimumInteractiveComponentEnforcement provides false) {
                 Checkbox(
                     modifier = Modifier
                         .padding(top = 2.dp),
                     checked = completed,
+                    onCheckedChange = { onItemCompleteClick(item.id) },
                     colors = CheckboxDefaults.colors(
-                        checkedColor = Primary,
-                        uncheckedColor = Gray80,
-                        checkmarkColor = White,
-                    ),
-                    onCheckedChange = { onItemCompleteClick(item.id) }
+                        checkedColor = MaterialTheme.colorScheme.primary,
+                        uncheckedColor = MaterialTheme.colorScheme.outline,
+                        checkmarkColor = MaterialTheme.colorScheme.onPrimary,
+                    )
                 )
             }
             Column(
@@ -190,8 +229,11 @@ private fun TodoItem(
                     Alignment.CenterVertically
                 )
             ) {
-                Body1Text(text = item.title, color = Dark)
-                Body2Text(text = item.dueDisplayText, color = Primary)
+                Body1Text(text = item.title, color = MaterialTheme.colorScheme.onSecondaryContainer)
+                Body2Text(
+                    text = item.dueDisplayText,
+                    color = MaterialTheme.colorScheme.onSecondaryContainer
+                )
             }
         }
     }
@@ -217,7 +259,7 @@ private fun HomeEmptyState(
         )
         OverlineText(
             text = date,
-            color = Primary
+            color = MaterialTheme.colorScheme.primary
         )
         Headline6Text(
             text = stringResource(id = R.string.title_home_empty),
@@ -225,8 +267,8 @@ private fun HomeEmptyState(
         )
         Button(
             colors = ButtonDefaults.buttonColors(
-                containerColor = Primary,
-                contentColor = White,
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimary,
             ),
             shape = RoundedCornerShape(50.dp),
             onClick = { onAddTaskClick() }
@@ -248,8 +290,8 @@ private fun HomeScreenTopAppBar(
 ) {
     Surface {
         TopAppBar(
-            colors = TopAppBarDefaults.smallTopAppBarColors(
-                containerColor = White,
+            colors = TopAppBarDefaults.topAppBarColors(
+                containerColor = MaterialTheme.colorScheme.surface,
             ),
             title = {
                 Column(modifier = Modifier.wrapContentSize()) {
@@ -257,7 +299,7 @@ private fun HomeScreenTopAppBar(
                         Text(
                             text = date,
                             style = MaterialTheme.typography.labelSmall,
-                            color = Primary
+                            color = MaterialTheme.colorScheme.primary
                         )
                     }
                     Text(
@@ -316,6 +358,17 @@ private fun TopAppBarPreview() {
             isLoading = false,
             date = DATETIME_FORMATTER_DAY_MONTH_YEAR.format(LocalDate.now())
         )
+    }
+}
+
+@ExperimentalMaterial3Api
+@Preview(showBackground = true)
+@Composable
+private fun BottomAppBarPreview() {
+    DailyFocusTheme {
+        HomeScreenBottomAppBar {
+
+        }
     }
 }
 

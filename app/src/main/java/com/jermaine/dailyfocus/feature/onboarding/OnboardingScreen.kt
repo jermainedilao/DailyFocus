@@ -11,6 +11,8 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.BlendMode
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -71,9 +73,9 @@ fun OnboardingScreen(
                     ButtonText(
                         text = stringResource(id = R.string.action_back),
                         color = if (pagerState.targetPage > 0) {
-                            Primary
+                            MaterialTheme.colorScheme.primary
                         } else {
-                            Primary200
+                            MaterialTheme.colorScheme.primary.copy(alpha = .38f)
                         },
                     )
                 }
@@ -94,7 +96,7 @@ fun OnboardingScreen(
                         } else {
                             stringResource(id = R.string.action_next)
                         },
-                        color = Primary,
+                        color = MaterialTheme.colorScheme.primary,
                     )
                 }
             }
@@ -161,9 +163,9 @@ private fun PageIndicators(page: Int) {
                 .clip(CircleShape)
                 .background(
                     if (page == 0) {
-                        Primary
+                        MaterialTheme.colorScheme.primary
                     } else {
-                        Primary100
+                        MaterialTheme.colorScheme.primary.copy(alpha = .38f)
                     }
                 )
         )
@@ -174,9 +176,9 @@ private fun PageIndicators(page: Int) {
                 .clip(CircleShape)
                 .background(
                     if (page == 1) {
-                        Primary
+                        MaterialTheme.colorScheme.primary
                     } else {
-                        Primary100
+                        MaterialTheme.colorScheme.primary.copy(alpha = .38f)
                     }
                 )
         )
@@ -187,9 +189,9 @@ private fun PageIndicators(page: Int) {
                 .clip(CircleShape)
                 .background(
                     if (page == 2) {
-                        Primary
+                        MaterialTheme.colorScheme.primary
                     } else {
-                        Primary100
+                        MaterialTheme.colorScheme.primary.copy(alpha = .38f)
                     }
                 )
         )
