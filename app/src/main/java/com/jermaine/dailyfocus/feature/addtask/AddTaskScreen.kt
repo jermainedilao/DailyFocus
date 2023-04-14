@@ -15,20 +15,29 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.outlined.Check
+import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.BottomAppBarDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExtendedFloatingActionButton
+import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TimePicker
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.contentColorFor
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -43,6 +52,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -56,7 +66,10 @@ import com.jermaine.dailyfocus.ui.composable.Headline6Text
 import com.jermaine.dailyfocus.ui.theme.DailyFocusTheme
 import com.jermaine.dailyfocus.ui.theme.grids
 import com.jermaine.dailyfocus.util.TIME_FORMATTER
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import java.time.LocalTime
+import java.util.UUID
 
 private typealias OnAddTaskCompleteListener = () -> Unit
 private typealias OnCloseClickListener = () -> Unit
@@ -64,36 +77,53 @@ private typealias OnSaveClickListener = () -> Unit
 private typealias OnTimeSetListener = (LocalTime) -> Unit
 private typealias OnDismissListener = () -> Unit
 private typealias OnTitleChangedListener = (TextFieldValue) -> Unit
+private typealias OnCompleteTaskListener = () -> Unit
+private typealias OnDeleteTaskListener = () -> Unit
 
+@ExperimentalCoroutinesApi
+@FlowPreview
 @ExperimentalMaterial3Api
 @Composable
 fun AddTaskScreen(
+    id: UUID?,
     viewModel: AddTaskViewModel = hiltViewModel(),
     onAddTaskCompleteListener: OnAddTaskCompleteListener,
     onCloseClickListener: OnCloseClickListener,
 ) {
+    val isEdit by remember(id) {
+        derivedStateOf { id != null }
+    }
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val currentOnAddTaskCompleteListener by rememberUpdatedState(onAddTaskCompleteListener)
 
-    var titleState by remember {
-        mutableStateOf("")
+    var titleState by remember(state.todo?.title) {
+        mutableStateOf(state.todo?.title.orEmpty())
     }
-    var dueState by remember {
-        mutableStateOf<LocalTime?>(null)
+    var dueState by remember(state.todo?.due) {
+        mutableStateOf(state.todo?.due)
     }
 
     state.events?.let { events ->
         LaunchedEffect(events) {
-            events.firstOrNull { it is AddTaskUiEvent.SaveComplete }?.let {
+            events.firstOrNull {
+                it in arrayOf(
+                    AddTaskUiEvent.SaveComplete,
+                    AddTaskUiEvent.DeleteSuccessful
+                )
+            }?.let {
                 currentOnAddTaskCompleteListener.invoke()
                 viewModel.consumeEvent(it)
             }
         }
     }
 
+    LaunchedEffect(isEdit, id) {
+        id?.let(viewModel::loadTodo)
+    }
+
     Scaffold(
         topBar = {
-            AddTaskTopAppBar(
+            AddTaskScreenTopAppBar(
                 onCloseClickListener = {
                     onCloseClickListener.invoke()
                 },
@@ -103,12 +133,26 @@ fun AddTaskScreen(
 
                     if (title.isNotEmpty() && due != null) {
                         viewModel.saveTodo(
+                            id = id,
                             title = title,
                             due = due
                         )
                     }
                 }
             )
+        },
+        bottomBar = {
+            if (isEdit) {
+                AddTaskScreenBottomAppBar(
+                    state = state,
+                    onDeleteTaskListener = {
+                        id?.let(viewModel::deleteTodo)
+                    },
+                    onCompleteTask = {
+                        id?.let(viewModel::completeTodo)
+                    }
+                )
+            }
         }
     ) { padding ->
         Box(
@@ -117,6 +161,8 @@ fun AddTaskScreen(
                 .padding(padding)
         ) {
             AddTaskContent(
+                isEdit = isEdit,
+                state = state,
                 onTitleChangedListener = {
                     titleState = it.text
                 },
@@ -131,6 +177,8 @@ fun AddTaskScreen(
 @ExperimentalMaterial3Api
 @Composable
 private fun AddTaskContent(
+    isEdit: Boolean,
+    state: AddTaskUiState,
     onTitleChangedListener: OnTitleChangedListener,
     onTimeSetListener: OnTimeSetListener,
 ) {
@@ -138,8 +186,12 @@ private fun AddTaskContent(
         mutableStateOf(false)
     }
 
-    var due by remember {
-        mutableStateOf("")
+    var due by remember(state.todo?.due) {
+        mutableStateOf(state.todo?.due?.format(TIME_FORMATTER).orEmpty())
+    }
+
+    val isComplete by remember(state.todo?.isComplete) {
+        mutableStateOf(state.todo?.isComplete)
     }
 
     if (showTimePicker) {
@@ -162,7 +214,12 @@ private fun AddTaskContent(
     ) {
         TitleTextField(
             modifier = Modifier.fillMaxWidth(),
-            onTitleChanged = onTitleChangedListener
+            text = remember(state.todo?.title) {
+                state.todo?.title.orEmpty()
+            },
+            onTitleChanged = onTitleChangedListener,
+            isEdit = isEdit,
+            isComplete = isComplete ?: false,
         )
 
         Row(
@@ -194,6 +251,11 @@ private fun AddTaskContent(
                     MaterialTheme.colorScheme.onSurfaceVariant
                 } else {
                     MaterialTheme.colorScheme.onBackground
+                },
+                textDecoration = if (isComplete == true) {
+                    TextDecoration.LineThrough
+                } else {
+                    TextDecoration.None
                 }
             )
         }
@@ -270,18 +332,23 @@ private fun TimePickerDialog(
 @ExperimentalMaterial3Api
 @Composable
 private fun TitleTextField(
+    isEdit: Boolean,
+    text: String,
+    isComplete: Boolean,
     modifier: Modifier,
-    onTitleChanged: (TextFieldValue) -> Unit
+    onTitleChanged: (TextFieldValue) -> Unit,
 ) {
-    var titleState by remember {
-        mutableStateOf(TextFieldValue())
+    var titleState by remember(text) {
+        mutableStateOf(TextFieldValue(text))
     }
     val focusRequester = remember {
         FocusRequester()
     }
 
-    LaunchedEffect(Unit) {
-        focusRequester.requestFocus()
+    LaunchedEffect(isEdit) {
+        if (!isEdit) {
+            focusRequester.requestFocus()
+        }
     }
 
     TextField(
@@ -306,7 +373,13 @@ private fun TitleTextField(
             errorIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent
         ),
-        textStyle = MaterialTheme.typography.headlineMedium,
+        textStyle = MaterialTheme.typography.headlineMedium.copy(
+            textDecoration = if (isComplete) {
+                TextDecoration.LineThrough
+            } else {
+                TextDecoration.None
+            }
+        ),
         singleLine = true,
         placeholder = {
             Headline6Text(
@@ -322,7 +395,7 @@ private fun TitleTextField(
 
 @ExperimentalMaterial3Api
 @Composable
-private fun AddTaskTopAppBar(
+private fun AddTaskScreenTopAppBar(
     onCloseClickListener: OnCloseClickListener,
     onSaveClickListener: OnSaveClickListener,
 ) {
@@ -357,12 +430,78 @@ private fun AddTaskTopAppBar(
     }
 }
 
+@Composable
+fun AddTaskScreenBottomAppBar(
+    state: AddTaskUiState,
+    onDeleteTaskListener: OnDeleteTaskListener,
+    onCompleteTask: OnCompleteTaskListener
+) {
+    val isComplete by remember(state.todo?.isComplete) {
+        mutableStateOf(state.todo?.isComplete)
+    }
+
+    BottomAppBar(
+        actions = {
+            IconButton(
+                onClick = {
+                    onDeleteTaskListener.invoke()
+                }
+            ) {
+                Icon(
+                    Icons.Outlined.Delete,
+                    "Delete todo"
+                )
+            }
+        },
+        floatingActionButton = {
+            ExtendedFloatingActionButton(
+                text = {
+                    ButtonText(
+                        text = if (isComplete == false) {
+                            stringResource(id = R.string.action_mark_as_done)
+                        } else {
+                            stringResource(id = R.string.action_unmark_as_done)
+                        },
+                        color = contentColorFor(BottomAppBarDefaults.bottomAppBarFabColor)
+                    )
+                },
+                icon = {
+                    Icon(
+                        Icons.Outlined.Check,
+                        "Complete todo"
+                    )
+                },
+                onClick = { onCompleteTask.invoke() },
+                containerColor = BottomAppBarDefaults.bottomAppBarFabColor,
+                elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation()
+            )
+        }
+    )
+}
+
+@ExperimentalMaterial3Api
+@Preview
+@Composable
+fun BottomAppBarPreview() {
+    DailyFocusTheme {
+        AddTaskScreenBottomAppBar(
+            AddTaskUiState(null, null),
+            {
+
+            },
+            {
+
+            }
+        )
+    }
+}
+
 @ExperimentalMaterial3Api
 @Preview
 @Composable
 fun TopAppBarPreview() {
     DailyFocusTheme {
-        AddTaskTopAppBar(
+        AddTaskScreenTopAppBar(
             onCloseClickListener = {
 
             },
@@ -379,6 +518,8 @@ fun TopAppBarPreview() {
 fun AddTaskContentPreview() {
     DailyFocusTheme {
         AddTaskContent(
+            isEdit = true,
+            state = AddTaskUiState(null, null),
             onTitleChangedListener = {
 
             },

@@ -2,6 +2,7 @@ package com.jermaine.dailyfocus.feature.home
 
 import com.jermaine.dailyfocus.core.Interactor
 import com.jermaine.dailyfocus.data.TodoRepository
+import com.jermaine.dailyfocus.feature.usecase.ToggleCompleteTodoUseCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterIsInstance
@@ -14,12 +15,13 @@ import javax.inject.Inject
 
 @ExperimentalCoroutinesApi
 class HomeInteractor @Inject constructor(
-    private val todoRepository: TodoRepository
+    private val todoRepository: TodoRepository,
+    private val toggleCompleteTodoUseCase: ToggleCompleteTodoUseCase,
 ) : Interactor<HomeAction, HomeResult> {
 
     private fun subscribeToTodoList(action: HomeAction.LoadTodoList): Flow<HomeResult> {
         return todoRepository
-            .observe()
+            .observeAll()
             .map(HomeResult::TodoListLoaded)
             .onStart<HomeResult> {
                 emit(HomeResult.LoadingStarted)
@@ -28,7 +30,7 @@ class HomeInteractor @Inject constructor(
 
     private fun toggleCompletion(action: HomeAction.CompleteItem): Flow<HomeResult> {
         return flow {
-            todoRepository.completeTodo(action.id)
+            toggleCompleteTodoUseCase.execute(action.id)
         }
     }
 

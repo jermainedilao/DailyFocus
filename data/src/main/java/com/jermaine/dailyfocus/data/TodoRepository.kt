@@ -5,6 +5,7 @@ import com.jermaine.dailyfocus.data.local.model.TodoDbModel
 import com.jermaine.dailyfocus.domain.model.TodoModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 import java.time.LocalTime
 import java.util.UUID
@@ -15,17 +16,23 @@ import javax.inject.Singleton
 class TodoRepository @Inject constructor(
     private val todoDao: TodoDao
 ) {
-    fun observe(): Flow<List<TodoModel>> =
+    fun observeAll(): Flow<List<TodoModel>> =
         todoDao
             .observeAll()
             .distinctUntilChanged()
             .map { it.map(TodoDbModel::toDomain) }
 
-    suspend fun completeTodo(id: UUID) {
-        val todo = todoDao.get(id.toString()).run {
-            copy(completed = completed.not())
-        }
-        todoDao.update(todo)
+    fun observeSingle(id: UUID): Flow<TodoModel> =
+        todoDao
+            .observeSingle(id.toString())
+            .distinctUntilChanged()
+            .filterNotNull()
+            .map(TodoDbModel::toDomain)
+
+    suspend fun getTodo(id: UUID): TodoModel {
+        return TodoDbModel.toDomain(
+            todoDao.get(id.toString())
+        )
     }
 
     suspend fun addTodo(title: String, due: LocalTime) {
@@ -33,8 +40,16 @@ class TodoRepository @Inject constructor(
             id = UUID.randomUUID(),
             title = title,
             due = due,
-            completed = false,
+            isComplete = false,
         )
         todoDao.insert(TodoDbModel.fromDomain(todo))
+    }
+
+    suspend fun updateTodo(todo: TodoModel) {
+        todoDao.update(TodoDbModel.fromDomain(todo))
+    }
+
+    suspend fun deleteTodo(id: UUID) {
+        todoDao.delete(id.toString())
     }
 }

@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import com.jermaine.dailyfocus.ui.theme.DailyFocusTheme
 
@@ -31,10 +32,13 @@ fun Body1Text(
     modifier: Modifier = Modifier,
     color: Color = MaterialTheme.colorScheme.onBackground,
     textAlign: TextAlign? = null,
+    textDecoration: TextDecoration = TextDecoration.None
 ) {
     Text(
         text = text,
-        style = MaterialTheme.typography.bodyLarge,
+        style = MaterialTheme.typography.bodyLarge.copy(
+            textDecoration = textDecoration
+        ),
         color = color,
         modifier = modifier,
         textAlign = textAlign,
@@ -47,10 +51,13 @@ fun Body2Text(
     modifier: Modifier = Modifier,
     color: Color = MaterialTheme.colorScheme.onBackground,
     textAlign: TextAlign? = null,
+    textDecoration: TextDecoration = TextDecoration.None
 ) {
     Text(
         text = text,
-        style = MaterialTheme.typography.bodyMedium,
+        style = MaterialTheme.typography.bodyMedium.copy(
+            textDecoration = textDecoration
+        ),
         color = color,
         modifier = modifier,
         textAlign = textAlign,

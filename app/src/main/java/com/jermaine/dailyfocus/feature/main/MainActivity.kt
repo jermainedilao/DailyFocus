@@ -10,23 +10,29 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import androidx.navigation.navOptions
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.jermaine.dailyfocus.feature.addtask.AddTaskScreen
 import com.jermaine.dailyfocus.feature.home.HomeScreen
 import com.jermaine.dailyfocus.feature.onboarding.OnboardingScreen
 import com.jermaine.dailyfocus.ui.theme.DailyFocusTheme
+import com.jermaine.dailyfocus.util.ARGS_ID
 import com.jermaine.dailyfocus.util.NAVIGATION_ADD_TASK
 import com.jermaine.dailyfocus.util.NAVIGATION_HOME
 import com.jermaine.dailyfocus.util.NAVIGATION_ONBOARDING
 import com.jermaine.dailyfocus.util.PREF_IS_ONBOARDED
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
+import java.util.UUID
 import javax.inject.Inject
 
+@FlowPreview
 @ExperimentalCoroutinesApi
 @ExperimentalPagerApi
 @ExperimentalMaterial3Api
@@ -77,14 +83,33 @@ class MainActivity : ComponentActivity() {
                 }
             }
             composable(NAVIGATION_HOME) {
-                HomeScreen {
-                    navController.navigate(
-                        NAVIGATION_ADD_TASK,
-                    )
-                }
+                HomeScreen(
+                    onAddTaskClick = {
+                        navController.navigate(
+                            NAVIGATION_ADD_TASK,
+                        )
+                    },
+                    onViewTaskClick = {
+                        navController.navigate(
+                            "$NAVIGATION_ADD_TASK?$ARGS_ID=$it",
+                        )
+                    }
+                )
             }
-            composable(NAVIGATION_ADD_TASK) {
+            composable(
+                "$NAVIGATION_ADD_TASK?$ARGS_ID={$ARGS_ID}",
+                arguments = listOf(
+                    navArgument(ARGS_ID) {
+                        type = NavType.StringType
+                        nullable = true
+                        defaultValue = null
+                    }
+                )
+            ) { backStackEntry ->
                 AddTaskScreen(
+                    id = backStackEntry.arguments?.getString(ARGS_ID)?.let {
+                        UUID.fromString(it)
+                    },
                     onAddTaskCompleteListener = {
                         navController.navigateUp()
                     },

@@ -20,7 +20,7 @@ data class TodoDbModel(
                     id = UUID.fromString(uid),
                     title = title,
                     due = due,
-                    completed = completed
+                    isComplete = completed
                 )
             }
         }
@@ -31,7 +31,7 @@ data class TodoDbModel(
                     uid = id.toString(),
                     title = title,
                     due = due,
-                    completed = completed
+                    completed = isComplete
                 )
             }
         }

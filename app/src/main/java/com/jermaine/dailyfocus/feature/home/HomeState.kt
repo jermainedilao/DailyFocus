@@ -31,5 +31,5 @@ data class TodoUiModel(
     val id: UUID,
     val title: String,
     val dueDisplayText: String,
-    val completed: Boolean
+    val isComplete: Boolean
 )

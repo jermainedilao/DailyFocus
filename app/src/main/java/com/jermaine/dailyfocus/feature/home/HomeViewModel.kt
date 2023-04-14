@@ -32,7 +32,7 @@ class HomeViewModel @Inject constructor(
                             id = item.id,
                             title = item.title,
                             dueDisplayText = item.due.format(TIME_FORMATTER),
-                            completed = item.completed
+                            isComplete = item.isComplete
                         )
                     },
                     isFirstOpen = false,

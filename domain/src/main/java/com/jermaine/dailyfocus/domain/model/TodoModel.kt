@@ -7,5 +7,5 @@ data class TodoModel(
     val id: UUID,
     val title: String,
     val due: LocalTime,
-    val completed: Boolean,
+    val isComplete: Boolean,
 )

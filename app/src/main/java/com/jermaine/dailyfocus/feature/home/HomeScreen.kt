@@ -1,7 +1,6 @@
 package com.jermaine.dailyfocus.feature.home
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -31,7 +30,6 @@ import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalMinimumInteractiveComponentEnforcement
-import androidx.compose.material3.LocalMinimumTouchTargetEnforcement
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -45,12 +43,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -71,14 +68,17 @@ import java.time.LocalDate
 import java.util.UUID
 
 private typealias OnAddTaskClickListener = () -> Unit
+private typealias OnViewTaskClickListener = (id: UUID) -> Unit
 private typealias OnItemCompleteClickListener = (id: UUID) -> Unit
+private typealias OnItemClickListener = (todo: TodoUiModel) -> Unit
 
 @ExperimentalCoroutinesApi
 @ExperimentalMaterial3Api
 @Composable
 fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel(),
-    onAddTaskClick: OnAddTaskClickListener = {}
+    onAddTaskClick: OnAddTaskClickListener = {},
+    onViewTaskClick: OnViewTaskClickListener = {},
 ) {
     viewModel.observeLifecycle(LocalLifecycleOwner.current.lifecycle)
     val state by viewModel.uiState.collectAsStateWithLifecycle()
@@ -101,7 +101,10 @@ fun HomeScreen(
             state = state,
             date = date,
             onAddTaskClick = onAddTaskClick,
-            onItemCompleteClick = viewModel::onItemComplete
+            onItemCompleteClick = viewModel::onItemComplete,
+            onItemClick = {
+                onViewTaskClick.invoke(it.id)
+            },
         )
     }
 }
@@ -142,6 +145,7 @@ private fun HomeScreenContent(
     date: String,
     onAddTaskClick: OnAddTaskClickListener,
     onItemCompleteClick: OnItemCompleteClickListener,
+    onItemClick: OnItemClickListener,
 ) {
     Box(modifier = modifier) {
         ContentLinearProgressIndicator(isLoading = state.isLoading)
@@ -160,6 +164,7 @@ private fun HomeScreenContent(
                 modifier = Modifier.fillMaxSize(),
                 items = state.items,
                 onItemCompleteClick = onItemCompleteClick,
+                onItemClick = onItemClick,
             )
         }
     }
@@ -171,6 +176,7 @@ private fun TodoList(
     modifier: Modifier,
     items: List<TodoUiModel>,
     onItemCompleteClick: OnItemCompleteClickListener,
+    onItemClick: OnItemClickListener,
 ) {
     LazyColumn(
         modifier = modifier,
@@ -178,7 +184,11 @@ private fun TodoList(
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         items(items) { item ->
-            TodoItem(item, onItemCompleteClick)
+            TodoItem(
+                item = item,
+                onItemCompleteClick = onItemCompleteClick,
+                onItemClick = onItemClick,
+            )
         }
     }
 }
@@ -188,19 +198,22 @@ private fun TodoList(
 private fun TodoItem(
     item: TodoUiModel,
     onItemCompleteClick: OnItemCompleteClickListener,
+    onItemClick: OnItemClickListener,
 ) {
-    val completed by remember(item.completed) {
-        mutableStateOf(item.completed)
+    val completed by remember(item.isComplete) {
+        mutableStateOf(item.isComplete)
     }
 
     Card(
         modifier = Modifier
-            .fillMaxWidth()
-            .clickable { },
+            .fillMaxWidth(),
         shape = RoundedCornerShape(10.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.secondaryContainer
-        )
+        ),
+        onClick = {
+            onItemClick.invoke(item)
+        }
     ) {
         Row(
             modifier = Modifier
@@ -229,10 +242,31 @@ private fun TodoItem(
                     Alignment.CenterVertically
                 )
             ) {
-                Body1Text(text = item.title, color = MaterialTheme.colorScheme.onSecondaryContainer)
+                Body1Text(
+                    text = item.title,
+                    color = if (item.isComplete) {
+                        MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = .50f)
+                    } else {
+                        MaterialTheme.colorScheme.onSecondaryContainer
+                    },
+                    textDecoration = if (item.isComplete) {
+                        TextDecoration.LineThrough
+                    } else {
+                        TextDecoration.None
+                    }
+                )
                 Body2Text(
                     text = item.dueDisplayText,
-                    color = MaterialTheme.colorScheme.onSecondaryContainer
+                    color = if (item.isComplete) {
+                        MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = .50f)
+                    } else {
+                        MaterialTheme.colorScheme.onSecondaryContainer
+                    },
+                    textDecoration = if (item.isComplete) {
+                        TextDecoration.LineThrough
+                    } else {
+                        TextDecoration.None
+                    }
                 )
             }
         }
@@ -317,9 +351,7 @@ private fun HomeScreenTopAppBar(
 @Composable
 private fun TodoItemPreview() {
     DailyFocusTheme {
-        TodoItem(item = previewData().first()) {
-
-        }
+        TodoItem(item = previewData().first(), {}, {})
     }
 }
 
@@ -378,9 +410,7 @@ private fun BottomAppBarPreview() {
 @Composable
 private fun DefaultPreview() {
     DailyFocusTheme {
-        TodoList(modifier = Modifier.fillMaxSize(), items = previewData()) {
-
-        }
+        TodoList(modifier = Modifier.fillMaxSize(), items = previewData(), {}, {})
     }
 }
 
@@ -389,18 +419,18 @@ private fun previewData() = listOf(
         id = UUID.randomUUID(),
         title = "Wash the dishes",
         dueDisplayText = "9:00 AM",
-        completed = true,
+        isComplete = true,
     ),
     TodoUiModel(
         id = UUID.randomUUID(),
         title = "Do laundry",
         dueDisplayText = "9:00 AM",
-        completed = false,
+        isComplete = false,
     ),
     TodoUiModel(
         id = UUID.randomUUID(),
         title = "Walk the dog",
         dueDisplayText = "9:00 AM",
-        completed = false,
+        isComplete = false,
     )
 )
