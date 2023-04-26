@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 abstract class BaseViewModel<Action, Result, UiState, UIEvent> constructor(
-    interactor: Interactor<Action, Result>
+    interactor: Interactor<Action, Result>,
 ) : ViewModel() {
 
     protected abstract val defaultState: UiState

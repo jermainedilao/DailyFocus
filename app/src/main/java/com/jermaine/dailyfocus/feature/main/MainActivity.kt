@@ -78,7 +78,7 @@ class MainActivity : ComponentActivity() {
                             popUpTo(NAVIGATION_ONBOARDING) {
                                 inclusive = true
                             }
-                        }
+                        },
                     )
                 }
             }
@@ -93,7 +93,7 @@ class MainActivity : ComponentActivity() {
                         navController.navigate(
                             "$NAVIGATION_ADD_TASK?$ARGS_ID=$it",
                         )
-                    }
+                    },
                 )
             }
             composable(
@@ -103,8 +103,8 @@ class MainActivity : ComponentActivity() {
                         type = NavType.StringType
                         nullable = true
                         defaultValue = null
-                    }
-                )
+                    },
+                ),
             ) { backStackEntry ->
                 AddTaskScreen(
                     id = backStackEntry.arguments?.getString(ARGS_ID)?.let {
@@ -115,7 +115,7 @@ class MainActivity : ComponentActivity() {
                     },
                     onCloseClickListener = {
                         navController.navigateUp()
-                    }
+                    },
                 )
             }
         }

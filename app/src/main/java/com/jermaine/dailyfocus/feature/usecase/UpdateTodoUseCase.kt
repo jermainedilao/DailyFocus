@@ -6,7 +6,7 @@ import java.util.UUID
 import javax.inject.Inject
 
 class UpdateTodoUseCase @Inject constructor(
-    private val todoRepository: TodoRepository
+    private val todoRepository: TodoRepository,
 ) {
     suspend fun execute(
         id: UUID,
@@ -16,7 +16,7 @@ class UpdateTodoUseCase @Inject constructor(
         val todo = todoRepository.getTodo(id)
             .copy(
                 title = title,
-                due = due
+                due = due,
             )
         todoRepository.updateTodo(todo)
     }

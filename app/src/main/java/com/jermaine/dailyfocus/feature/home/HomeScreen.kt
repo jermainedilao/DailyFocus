@@ -92,7 +92,7 @@ fun HomeScreen(
             if (state.items.isNotEmpty()) {
                 HomeScreenBottomAppBar(onAddTaskClick)
             }
-        }
+        },
     ) { padding ->
         HomeScreenContent(
             modifier = Modifier
@@ -111,14 +111,14 @@ fun HomeScreen(
 
 @Composable
 fun HomeScreenBottomAppBar(
-    onAddTaskClick: OnAddTaskClickListener
+    onAddTaskClick: OnAddTaskClickListener,
 ) {
     BottomAppBar(
         actions = {
             IconButton(onClick = { /*TODO*/ }) {
                 Icon(
                     painterResource(id = R.drawable.ic_archive),
-                    "Archives"
+                    "Archives",
                 )
             }
         },
@@ -126,14 +126,14 @@ fun HomeScreenBottomAppBar(
             FloatingActionButton(
                 onClick = { onAddTaskClick.invoke() },
                 containerColor = BottomAppBarDefaults.bottomAppBarFabColor,
-                elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation()
+                elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation(),
             ) {
                 Icon(
                     Icons.Filled.Add,
-                    "Add"
+                    "Add",
                 )
             }
-        }
+        },
     )
 }
 
@@ -181,7 +181,7 @@ private fun TodoList(
     LazyColumn(
         modifier = modifier,
         contentPadding = PaddingValues(16.dp, 8.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         items(items) { item ->
             TodoItem(
@@ -209,18 +209,18 @@ private fun TodoItem(
             .fillMaxWidth(),
         shape = RoundedCornerShape(10.dp),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.secondaryContainer
+            containerColor = MaterialTheme.colorScheme.secondaryContainer,
         ),
         onClick = {
             onItemClick.invoke(item)
-        }
+        },
     ) {
         Row(
             modifier = Modifier
                 .padding(MaterialTheme.grids.grid16)
                 .fillMaxWidth(),
             verticalAlignment = Alignment.Top,
-            horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.Start)
+            horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.Start),
         ) {
             CompositionLocalProvider(LocalMinimumInteractiveComponentEnforcement provides false) {
                 Checkbox(
@@ -232,15 +232,15 @@ private fun TodoItem(
                         checkedColor = MaterialTheme.colorScheme.primary,
                         uncheckedColor = MaterialTheme.colorScheme.outline,
                         checkmarkColor = MaterialTheme.colorScheme.onPrimary,
-                    )
+                    ),
                 )
             }
             Column(
                 horizontalAlignment = Alignment.Start,
                 verticalArrangement = Arrangement.spacedBy(
                     MaterialTheme.grids.grid4,
-                    Alignment.CenterVertically
-                )
+                    Alignment.CenterVertically,
+                ),
             ) {
                 Body1Text(
                     text = item.title,
@@ -253,7 +253,7 @@ private fun TodoItem(
                         TextDecoration.LineThrough
                     } else {
                         TextDecoration.None
-                    }
+                    },
                 )
                 Body2Text(
                     text = item.dueDisplayText,
@@ -266,7 +266,7 @@ private fun TodoItem(
                         TextDecoration.LineThrough
                     } else {
                         TextDecoration.None
-                    }
+                    },
                 )
             }
         }
@@ -284,20 +284,20 @@ private fun HomeEmptyState(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(
             space = MaterialTheme.grids.grid16,
-            alignment = Alignment.CenterVertically
+            alignment = Alignment.CenterVertically,
         ),
     ) {
         Image(
             painter = painterResource(R.drawable.image_home_empty),
-            contentDescription = "Illustration for home empty state"
+            contentDescription = "Illustration for home empty state",
         )
         OverlineText(
             text = date,
-            color = MaterialTheme.colorScheme.primary
+            color = MaterialTheme.colorScheme.primary,
         )
         Headline6Text(
             text = stringResource(id = R.string.title_home_empty),
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
         )
         Button(
             colors = ButtonDefaults.buttonColors(
@@ -305,7 +305,7 @@ private fun HomeEmptyState(
                 contentColor = MaterialTheme.colorScheme.onPrimary,
             ),
             shape = RoundedCornerShape(50.dp),
-            onClick = { onAddTaskClick() }
+            onClick = { onAddTaskClick() },
         ) {
             Text(
                 text = stringResource(id = R.string.action_add_a_task).uppercase(),
@@ -320,7 +320,7 @@ private fun HomeEmptyState(
 private fun HomeScreenTopAppBar(
     todos: List<TodoUiModel>,
     isLoading: Boolean,
-    date: String
+    date: String,
 ) {
     Surface {
         TopAppBar(
@@ -333,7 +333,7 @@ private fun HomeScreenTopAppBar(
                         Text(
                             text = date,
                             style = MaterialTheme.typography.labelSmall,
-                            color = MaterialTheme.colorScheme.primary
+                            color = MaterialTheme.colorScheme.primary,
                         )
                     }
                     Text(
@@ -362,7 +362,7 @@ private fun HomeEmptyStatePreview() {
         HomeEmptyState(
             modifier = Modifier
                 .padding(horizontal = MaterialTheme.grids.grid40),
-            date = DATETIME_FORMATTER_DAY_MONTH_YEAR.format(LocalDate.now())
+            date = DATETIME_FORMATTER_DAY_MONTH_YEAR.format(LocalDate.now()),
         )
     }
 }
@@ -375,7 +375,7 @@ private fun TopAppBarEmptyPreview() {
         HomeScreenTopAppBar(
             todos = emptyList(),
             isLoading = false,
-            date = DATETIME_FORMATTER_DAY_MONTH_YEAR.format(LocalDate.now())
+            date = DATETIME_FORMATTER_DAY_MONTH_YEAR.format(LocalDate.now()),
         )
     }
 }
@@ -388,7 +388,7 @@ private fun TopAppBarPreview() {
         HomeScreenTopAppBar(
             todos = previewData(),
             isLoading = false,
-            date = DATETIME_FORMATTER_DAY_MONTH_YEAR.format(LocalDate.now())
+            date = DATETIME_FORMATTER_DAY_MONTH_YEAR.format(LocalDate.now()),
         )
     }
 }
@@ -399,7 +399,6 @@ private fun TopAppBarPreview() {
 private fun BottomAppBarPreview() {
     DailyFocusTheme {
         HomeScreenBottomAppBar {
-
         }
     }
 }
@@ -432,5 +431,5 @@ private fun previewData() = listOf(
         title = "Walk the dog",
         dueDisplayText = "9:00 AM",
         isComplete = false,
-    )
+    ),
 )

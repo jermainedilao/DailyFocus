@@ -25,15 +25,13 @@ sealed class AddTaskAction {
     data class CompleteTodo(val id: UUID) : AddTaskAction()
 
     data class DeleteTodo(val id: UUID) : AddTaskAction()
-
 }
 
 sealed class AddTaskResult {
     data class LoadTodoSuccessful(
-        val todo: TodoModel
+        val todo: TodoModel,
     ) : AddTaskResult()
 
     object SaveTodoComplete : AddTaskResult()
     object DeleteSuccessful : AddTaskResult()
-
 }

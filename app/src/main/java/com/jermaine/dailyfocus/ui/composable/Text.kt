@@ -32,12 +32,12 @@ fun Body1Text(
     modifier: Modifier = Modifier,
     color: Color = MaterialTheme.colorScheme.onBackground,
     textAlign: TextAlign? = null,
-    textDecoration: TextDecoration = TextDecoration.None
+    textDecoration: TextDecoration = TextDecoration.None,
 ) {
     Text(
         text = text,
         style = MaterialTheme.typography.bodyLarge.copy(
-            textDecoration = textDecoration
+            textDecoration = textDecoration,
         ),
         color = color,
         modifier = modifier,
@@ -51,12 +51,12 @@ fun Body2Text(
     modifier: Modifier = Modifier,
     color: Color = MaterialTheme.colorScheme.onBackground,
     textAlign: TextAlign? = null,
-    textDecoration: TextDecoration = TextDecoration.None
+    textDecoration: TextDecoration = TextDecoration.None,
 ) {
     Text(
         text = text,
         style = MaterialTheme.typography.bodyMedium.copy(
-            textDecoration = textDecoration
+            textDecoration = textDecoration,
         ),
         color = color,
         modifier = modifier,

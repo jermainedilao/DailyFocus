@@ -12,7 +12,7 @@ import javax.inject.Inject
 @ExperimentalCoroutinesApi
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    interactor: HomeInteractor
+    interactor: HomeInteractor,
 ) : BaseViewModel<HomeAction, HomeResult, HomeUiState, HomeUiEvent>(interactor),
     DefaultLifecycleObserver {
 
@@ -20,7 +20,7 @@ class HomeViewModel @Inject constructor(
         get() = HomeUiState(
             items = emptyList(),
             isLoading = false,
-            isFirstOpen = true
+            isFirstOpen = true,
         )
 
     override fun stateReducer(): (HomeUiState, HomeResult) -> HomeUiState =
@@ -32,7 +32,7 @@ class HomeViewModel @Inject constructor(
                             id = item.id,
                             title = item.title,
                             dueDisplayText = item.due.format(TIME_FORMATTER),
-                            isComplete = item.isComplete
+                            isComplete = item.isComplete,
                         )
                     },
                     isFirstOpen = false,
@@ -40,11 +40,11 @@ class HomeViewModel @Inject constructor(
                 )
 
                 HomeResult.LoadingFinished -> prevState.copy(
-                    isLoading = false
+                    isLoading = false,
                 )
 
                 HomeResult.LoadingStarted -> prevState.copy(
-                    isLoading = true
+                    isLoading = true,
                 )
             }
         }

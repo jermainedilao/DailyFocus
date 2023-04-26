@@ -29,8 +29,8 @@ android {
             setProguardFiles(
                 listOf(
                     getDefaultProguardFile("proguard-android-optimize.txt"),
-                    "proguard-rules.pro"
-                )
+                    "proguard-rules.pro",
+                ),
             )
         }
     }
@@ -63,10 +63,15 @@ dependencies {
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.hilt)
-    implementation(libs.hilt.navigation.compose)
-    kapt(libs.hilt.compiler)
+    implementation(libs.androidx.hilt.navigation.compose)
+    implementation(libs.androidx.hilt.workmanager)
 
-    ksp(libs.room.compiler)
+    kapt(libs.hilt.compiler)
+    kapt(libs.androidx.hilt.compiler)
+
+    ksp(libs.androidx.room.compiler)
+
+    implementation(libs.androidx.workmanager)
 
     testImplementation(libs.test.junit)
     androidTestImplementation(libs.bundles.android.test)

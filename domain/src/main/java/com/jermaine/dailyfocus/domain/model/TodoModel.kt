@@ -8,4 +8,5 @@ data class TodoModel(
     val title: String,
     val due: LocalTime,
     val isComplete: Boolean,
+    val isArchived: Boolean,
 )

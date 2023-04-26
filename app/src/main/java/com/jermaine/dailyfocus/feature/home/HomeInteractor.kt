@@ -21,7 +21,7 @@ class HomeInteractor @Inject constructor(
 
     private fun subscribeToTodoList(action: HomeAction.LoadTodoList): Flow<HomeResult> {
         return todoRepository
-            .observeAll()
+            .observeAll(false)
             .map(HomeResult::TodoListLoaded)
             .onStart<HomeResult> {
                 emit(HomeResult.LoadingStarted)

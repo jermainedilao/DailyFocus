@@ -27,7 +27,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -108,7 +107,7 @@ fun AddTaskScreen(
             events.firstOrNull {
                 it in arrayOf(
                     AddTaskUiEvent.SaveComplete,
-                    AddTaskUiEvent.DeleteSuccessful
+                    AddTaskUiEvent.DeleteSuccessful,
                 )
             }?.let {
                 currentOnAddTaskCompleteListener.invoke()
@@ -135,10 +134,10 @@ fun AddTaskScreen(
                         viewModel.saveTodo(
                             id = id,
                             title = title,
-                            due = due
+                            due = due,
                         )
                     }
-                }
+                },
             )
         },
         bottomBar = {
@@ -150,15 +149,15 @@ fun AddTaskScreen(
                     },
                     onCompleteTask = {
                         id?.let(viewModel::completeTodo)
-                    }
+                    },
                 )
             }
-        }
+        },
     ) { padding ->
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(padding)
+                .padding(padding),
         ) {
             AddTaskContent(
                 isEdit = isEdit,
@@ -168,7 +167,7 @@ fun AddTaskScreen(
                 },
                 onTimeSetListener = {
                     dueState = it
-                }
+                },
             )
         }
     }
@@ -196,6 +195,7 @@ private fun AddTaskContent(
 
     if (showTimePicker) {
         TimePickerDialog(
+            state.todo?.due,
             onDismissListener = {
                 showTimePicker = false
             },
@@ -203,14 +203,14 @@ private fun AddTaskContent(
                 due = TIME_FORMATTER.format(selectedTime)
                 onTimeSetListener.invoke(selectedTime)
                 showTimePicker = false
-            }
+            },
         )
     }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = MaterialTheme.grids.grid16)
+            .padding(horizontal = MaterialTheme.grids.grid16),
     ) {
         TitleTextField(
             modifier = Modifier.fillMaxWidth(),
@@ -227,7 +227,7 @@ private fun AddTaskContent(
                 .fillMaxWidth()
                 .clickable(
                     indication = null,
-                    interactionSource = remember { MutableInteractionSource() }
+                    interactionSource = remember { MutableInteractionSource() },
                 ) {
                     showTimePicker = true
                 }
@@ -236,12 +236,12 @@ private fun AddTaskContent(
                     bottom = MaterialTheme.grids.grid8,
                 ),
             horizontalArrangement = Arrangement.spacedBy(
-                MaterialTheme.grids.grid16
-            )
+                MaterialTheme.grids.grid16,
+            ),
         ) {
             Icon(
                 painter = painterResource(id = R.drawable.ic_clock),
-                contentDescription = "Set time"
+                contentDescription = "Set time",
             )
             Body2Text(
                 text = due.ifEmpty {
@@ -256,7 +256,7 @@ private fun AddTaskContent(
                     TextDecoration.LineThrough
                 } else {
                     TextDecoration.None
-                }
+                },
             )
         }
     }
@@ -265,13 +265,14 @@ private fun AddTaskContent(
 @ExperimentalMaterial3Api
 @Composable
 private fun TimePickerDialog(
+    due: LocalTime?,
     onDismissListener: OnDismissListener,
     onTimeSetListener: OnTimeSetListener,
 ) {
     val timePickerState = rememberTimePickerState(
-        initialHour = LocalTime.now().hour,
-        initialMinute = 0,
-        is24Hour = false
+        initialHour = due?.hour ?: LocalTime.now().hour,
+        initialMinute = due?.minute ?: 0,
+        is24Hour = false,
     )
 
     Dialog(
@@ -280,33 +281,33 @@ private fun TimePickerDialog(
         },
         properties = DialogProperties(
             dismissOnBackPress = true,
-            dismissOnClickOutside = true
-        )
+            dismissOnClickOutside = true,
+        ),
     ) {
         Column(
             modifier = Modifier
                 .background(
                     color = MaterialTheme.colorScheme.surface,
-                    shape = RoundedCornerShape(16.dp)
+                    shape = RoundedCornerShape(16.dp),
                 )
-                .padding(MaterialTheme.grids.grid24)
+                .padding(MaterialTheme.grids.grid24),
         ) {
             TimePicker(state = timePickerState)
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(
                     MaterialTheme.grids.grid8,
-                    Alignment.End
-                )
+                    Alignment.End,
+                ),
             ) {
                 TextButton(
                     onClick = {
                         onDismissListener.invoke()
-                    }
+                    },
                 ) {
                     ButtonText(
                         text = stringResource(id = R.string.action_cancel),
-                        color = MaterialTheme.colorScheme.primary
+                        color = MaterialTheme.colorScheme.primary,
                     )
                 }
                 TextButton(
@@ -314,14 +315,14 @@ private fun TimePickerDialog(
                         onTimeSetListener.invoke(
                             LocalTime.of(
                                 timePickerState.hour,
-                                timePickerState.minute
-                            )
+                                timePickerState.minute,
+                            ),
                         )
-                    }
+                    },
                 ) {
                     ButtonText(
                         text = stringResource(id = R.string.action_set),
-                        color = MaterialTheme.colorScheme.primary
+                        color = MaterialTheme.colorScheme.primary,
                     )
                 }
             }
@@ -355,7 +356,7 @@ private fun TitleTextField(
         modifier = modifier
             .offset(
                 x = -MaterialTheme.grids.grid16,
-                y = -MaterialTheme.grids.grid8
+                y = -MaterialTheme.grids.grid8,
             )
             .focusRequester(focusRequester),
         value = titleState,
@@ -371,25 +372,25 @@ private fun TitleTextField(
             focusedIndicatorColor = Color.Transparent,
             disabledIndicatorColor = Color.Transparent,
             errorIndicatorColor = Color.Transparent,
-            unfocusedIndicatorColor = Color.Transparent
+            unfocusedIndicatorColor = Color.Transparent,
         ),
         textStyle = MaterialTheme.typography.headlineMedium.copy(
             textDecoration = if (isComplete) {
                 TextDecoration.LineThrough
             } else {
                 TextDecoration.None
-            }
+            },
         ),
         singleLine = true,
         placeholder = {
             Headline6Text(
                 text = stringResource(id = R.string.hint_task_title),
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
         },
         keyboardOptions = KeyboardOptions.Default.copy(
-            capitalization = KeyboardCapitalization.Sentences
-        )
+            capitalization = KeyboardCapitalization.Sentences,
+        ),
     )
 }
 
@@ -408,24 +409,24 @@ private fun AddTaskScreenTopAppBar(
                 IconButton(
                     onClick = {
                         onCloseClickListener.invoke()
-                    }
+                    },
                 ) {
                     Icon(
                         imageVector = Icons.Default.Close,
-                        contentDescription = "Close"
+                        contentDescription = "Close",
                     )
                 }
             },
             actions = {
                 TextButton(
-                    onClick = { onSaveClickListener.invoke() }
+                    onClick = { onSaveClickListener.invoke() },
                 ) {
                     ButtonText(
                         text = stringResource(id = R.string.action_save),
-                        color = MaterialTheme.colorScheme.primary
+                        color = MaterialTheme.colorScheme.primary,
                     )
                 }
-            }
+            },
         )
     }
 }
@@ -434,7 +435,7 @@ private fun AddTaskScreenTopAppBar(
 fun AddTaskScreenBottomAppBar(
     state: AddTaskUiState,
     onDeleteTaskListener: OnDeleteTaskListener,
-    onCompleteTask: OnCompleteTaskListener
+    onCompleteTask: OnCompleteTaskListener,
 ) {
     val isComplete by remember(state.todo?.isComplete) {
         mutableStateOf(state.todo?.isComplete)
@@ -445,11 +446,11 @@ fun AddTaskScreenBottomAppBar(
             IconButton(
                 onClick = {
                     onDeleteTaskListener.invoke()
-                }
+                },
             ) {
                 Icon(
                     Icons.Outlined.Delete,
-                    "Delete todo"
+                    "Delete todo",
                 )
             }
         },
@@ -462,20 +463,20 @@ fun AddTaskScreenBottomAppBar(
                         } else {
                             stringResource(id = R.string.action_unmark_as_done)
                         },
-                        color = contentColorFor(BottomAppBarDefaults.bottomAppBarFabColor)
+                        color = contentColorFor(BottomAppBarDefaults.bottomAppBarFabColor),
                     )
                 },
                 icon = {
                     Icon(
                         Icons.Outlined.Check,
-                        "Complete todo"
+                        "Complete todo",
                     )
                 },
                 onClick = { onCompleteTask.invoke() },
                 containerColor = BottomAppBarDefaults.bottomAppBarFabColor,
-                elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation()
+                elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation(),
             )
-        }
+        },
     )
 }
 
@@ -487,11 +488,9 @@ fun BottomAppBarPreview() {
         AddTaskScreenBottomAppBar(
             AddTaskUiState(null, null),
             {
-
             },
             {
-
-            }
+            },
         )
     }
 }
@@ -503,11 +502,9 @@ fun TopAppBarPreview() {
     DailyFocusTheme {
         AddTaskScreenTopAppBar(
             onCloseClickListener = {
-
             },
             onSaveClickListener = {
-
-            }
+            },
         )
     }
 }
@@ -521,11 +518,9 @@ fun AddTaskContentPreview() {
             isEdit = true,
             state = AddTaskUiState(null, null),
             onTitleChangedListener = {
-
             },
             onTimeSetListener = {
-
-            }
+            },
         )
     }
 }

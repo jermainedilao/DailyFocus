@@ -19,7 +19,7 @@ sealed class HomeAction {
 
 sealed class HomeResult {
     data class TodoListLoaded(
-        val todoList: List<TodoModel>
+        val todoList: List<TodoModel>,
     ) : HomeResult()
 
     object LoadingStarted : HomeResult()
@@ -31,5 +31,5 @@ data class TodoUiModel(
     val id: UUID,
     val title: String,
     val dueDisplayText: String,
-    val isComplete: Boolean
+    val isComplete: Boolean,
 )

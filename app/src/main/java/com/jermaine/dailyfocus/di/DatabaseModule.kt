@@ -20,7 +20,7 @@ class DatabaseModule {
         return Room.databaseBuilder(
             context,
             DailyFocusDatabase::class.java,
-            "daily-focus-database"
+            "daily-focus-database",
         ).build()
     }
 

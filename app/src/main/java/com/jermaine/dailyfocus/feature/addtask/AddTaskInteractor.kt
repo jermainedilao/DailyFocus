@@ -37,13 +37,13 @@ class AddTaskInteractor @Inject constructor(
             if (action.id == null) {
                 addTodoUseCase.execute(
                     title = action.title,
-                    due = action.due
+                    due = action.due,
                 )
             } else {
                 updateTodoUseCase.execute(
                     id = action.id,
                     title = action.title,
-                    due = action.due
+                    due = action.due,
                 )
             }
             emit(AddTaskResult.SaveTodoComplete)
@@ -72,7 +72,7 @@ class AddTaskInteractor @Inject constructor(
             actions.filterIsInstance<AddTaskAction.CompleteTodo>()
                 .flatMapConcat(::completeTodo),
             actions.filterIsInstance<AddTaskAction.DeleteTodo>()
-                .flatMapLatest(::deleteTodo)
+                .flatMapLatest(::deleteTodo),
         )
     }
 }

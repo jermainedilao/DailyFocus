@@ -14,11 +14,11 @@ import javax.inject.Singleton
 
 @Singleton
 class TodoRepository @Inject constructor(
-    private val todoDao: TodoDao
+    private val todoDao: TodoDao,
 ) {
-    fun observeAll(): Flow<List<TodoModel>> =
+    fun observeAll(isArchives: Boolean): Flow<List<TodoModel>> =
         todoDao
-            .observeAll()
+            .observeAll(isArchives)
             .distinctUntilChanged()
             .map { it.map(TodoDbModel::toDomain) }
 
@@ -31,7 +31,7 @@ class TodoRepository @Inject constructor(
 
     suspend fun getTodo(id: UUID): TodoModel {
         return TodoDbModel.toDomain(
-            todoDao.get(id.toString())
+            todoDao.get(id.toString()),
         )
     }
 
@@ -41,6 +41,7 @@ class TodoRepository @Inject constructor(
             title = title,
             due = due,
             isComplete = false,
+            isArchived = false,
         )
         todoDao.insert(TodoDbModel.fromDomain(todo))
     }
@@ -51,5 +52,9 @@ class TodoRepository @Inject constructor(
 
     suspend fun deleteTodo(id: UUID) {
         todoDao.delete(id.toString())
+    }
+
+    suspend fun archiveAll() {
+        todoDao.archiveAll()
     }
 }

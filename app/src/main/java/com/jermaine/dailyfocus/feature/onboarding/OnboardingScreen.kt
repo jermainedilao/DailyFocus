@@ -11,8 +11,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.BlendMode
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -48,7 +46,7 @@ fun OnboardingScreen(
             HorizontalPager(
                 count = ONBOARDING_PAGE_COUNT,
                 state = pagerState,
-                modifier = Modifier.fillMaxHeight(.9f)
+                modifier = Modifier.fillMaxHeight(.9f),
             ) { page ->
                 OnboardingPage(page = page)
             }
@@ -58,7 +56,7 @@ fun OnboardingScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .fillMaxHeight()
-                    .padding(MaterialTheme.grids.grid16)
+                    .padding(MaterialTheme.grids.grid16),
             ) {
                 TextButton(
                     onClick = {
@@ -68,7 +66,7 @@ fun OnboardingScreen(
                             }
                         }
                     },
-                    enabled = pagerState.currentPage > 0
+                    enabled = pagerState.currentPage > 0,
                 ) {
                     ButtonText(
                         text = stringResource(id = R.string.action_back),
@@ -107,14 +105,14 @@ fun OnboardingScreen(
 @Composable
 private fun OnboardingPage(
     page: Int,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
         modifier = modifier
             .fillMaxWidth()
-            .padding(MaterialTheme.grids.grid16)
+            .padding(MaterialTheme.grids.grid16),
     ) {
         Image(
             painter = painterResource(
@@ -125,9 +123,9 @@ private fun OnboardingPage(
                     else -> {
                         throw IllegalArgumentException("Invalid $page!")
                     }
-                }
+                },
             ),
-            contentDescription = "Illustration for $page"
+            contentDescription = "Illustration for $page",
         )
         Spacer(modifier = Modifier.height(MaterialTheme.grids.grid24))
         PageIndicators(page = page)
@@ -166,8 +164,8 @@ private fun PageIndicators(page: Int) {
                         MaterialTheme.colorScheme.primary
                     } else {
                         MaterialTheme.colorScheme.primary.copy(alpha = .38f)
-                    }
-                )
+                    },
+                ),
         )
         Spacer(modifier = Modifier.size(MaterialTheme.grids.grid8))
         Box(
@@ -179,8 +177,8 @@ private fun PageIndicators(page: Int) {
                         MaterialTheme.colorScheme.primary
                     } else {
                         MaterialTheme.colorScheme.primary.copy(alpha = .38f)
-                    }
-                )
+                    },
+                ),
         )
         Spacer(modifier = Modifier.size(MaterialTheme.grids.grid8))
         Box(
@@ -192,8 +190,8 @@ private fun PageIndicators(page: Int) {
                         MaterialTheme.colorScheme.primary
                     } else {
                         MaterialTheme.colorScheme.primary.copy(alpha = .38f)
-                    }
-                )
+                    },
+                ),
         )
     }
 }
@@ -217,5 +215,4 @@ private fun OnboardingPagePreview() {
             page = 0,
         )
     }
-
 }

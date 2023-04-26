@@ -11,7 +11,8 @@ data class TodoDbModel(
     @PrimaryKey val uid: String,
     val title: String,
     val due: LocalTime,
-    val completed: Boolean,
+    val isCompleted: Boolean,
+    val isArchived: Boolean,
 ) {
     companion object {
         fun toDomain(dbModel: TodoDbModel): TodoModel {
@@ -20,7 +21,8 @@ data class TodoDbModel(
                     id = UUID.fromString(uid),
                     title = title,
                     due = due,
-                    isComplete = completed
+                    isComplete = isCompleted,
+                    isArchived = isArchived,
                 )
             }
         }
@@ -31,7 +33,8 @@ data class TodoDbModel(
                     uid = id.toString(),
                     title = title,
                     due = due,
-                    completed = isComplete
+                    isCompleted = isComplete,
+                    isArchived = isArchived,
                 )
             }
         }
