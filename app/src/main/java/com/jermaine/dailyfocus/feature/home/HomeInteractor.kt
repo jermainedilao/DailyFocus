@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.onStart
+import java.time.LocalDate
 import javax.inject.Inject
 
 @ExperimentalCoroutinesApi
@@ -21,7 +22,7 @@ class HomeInteractor @Inject constructor(
 
     private fun subscribeToTodoList(action: HomeAction.LoadTodoList): Flow<HomeResult> {
         return todoRepository
-            .observeAll(false)
+            .observeAll(LocalDate.now())
             .map(HomeResult::TodoListLoaded)
             .onStart<HomeResult> {
                 emit(HomeResult.LoadingStarted)

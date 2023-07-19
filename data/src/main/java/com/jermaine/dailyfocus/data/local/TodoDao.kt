@@ -6,11 +6,12 @@ import androidx.room.Query
 import androidx.room.Update
 import com.jermaine.dailyfocus.data.local.model.TodoDbModel
 import kotlinx.coroutines.flow.Flow
+import java.time.LocalDate
 
 @Dao
 interface TodoDao {
-    @Query("SELECT * FROM todo WHERE isArchived = :isArchives ORDER BY due asc")
-    fun observeAll(isArchives: Boolean): Flow<List<TodoDbModel>>
+    @Query("SELECT * FROM todo WHERE createdAt = :createdAt ORDER BY due asc")
+    fun observeAll(createdAt: LocalDate): Flow<List<TodoDbModel>>
 
     @Query("SELECT * FROM todo WHERE uid = :uid")
     suspend fun get(uid: String): TodoDbModel
@@ -26,7 +27,4 @@ interface TodoDao {
 
     @Query("DELETE FROM todo WHERE uid = :uid")
     suspend fun delete(uid: String)
-
-    @Query("UPDATE todo SET isArchived = 1 WHERE isArchived = 0")
-    suspend fun archiveAll()
 }

@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
+import java.time.LocalDate
 import java.time.LocalTime
 import java.util.UUID
 import javax.inject.Inject
@@ -16,9 +17,9 @@ import javax.inject.Singleton
 class TodoRepository @Inject constructor(
     private val todoDao: TodoDao,
 ) {
-    fun observeAll(isArchives: Boolean): Flow<List<TodoModel>> =
+    fun observeAll(createdAt: LocalDate): Flow<List<TodoModel>> =
         todoDao
-            .observeAll(isArchives)
+            .observeAll(createdAt)
             .distinctUntilChanged()
             .map { it.map(TodoDbModel::toDomain) }
 
@@ -41,7 +42,7 @@ class TodoRepository @Inject constructor(
             title = title,
             due = due,
             isComplete = false,
-            isArchived = false,
+            createdAt = LocalDate.now(),
         )
         todoDao.insert(TodoDbModel.fromDomain(todo))
     }
@@ -52,9 +53,5 @@ class TodoRepository @Inject constructor(
 
     suspend fun deleteTodo(id: UUID) {
         todoDao.delete(id.toString())
-    }
-
-    suspend fun archiveAll() {
-        todoDao.archiveAll()
     }
 }

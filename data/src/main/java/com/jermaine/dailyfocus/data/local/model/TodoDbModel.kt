@@ -3,6 +3,7 @@ package com.jermaine.dailyfocus.data.local.model
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.jermaine.dailyfocus.domain.model.TodoModel
+import java.time.LocalDate
 import java.time.LocalTime
 import java.util.UUID
 
@@ -12,7 +13,7 @@ data class TodoDbModel(
     val title: String,
     val due: LocalTime,
     val isCompleted: Boolean,
-    val isArchived: Boolean,
+    val createdAt: LocalDate,
 ) {
     companion object {
         fun toDomain(dbModel: TodoDbModel): TodoModel {
@@ -22,7 +23,7 @@ data class TodoDbModel(
                     title = title,
                     due = due,
                     isComplete = isCompleted,
-                    isArchived = isArchived,
+                    createdAt = createdAt,
                 )
             }
         }
@@ -34,7 +35,7 @@ data class TodoDbModel(
                     title = title,
                     due = due,
                     isCompleted = isComplete,
-                    isArchived = isArchived,
+                    createdAt = createdAt,
                 )
             }
         }

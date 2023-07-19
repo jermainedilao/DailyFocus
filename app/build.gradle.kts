@@ -64,14 +64,11 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.hilt)
     implementation(libs.androidx.hilt.navigation.compose)
-    implementation(libs.androidx.hilt.workmanager)
 
     kapt(libs.hilt.compiler)
     kapt(libs.androidx.hilt.compiler)
 
     ksp(libs.androidx.room.compiler)
-
-    implementation(libs.androidx.workmanager)
 
     testImplementation(libs.test.junit)
     androidTestImplementation(libs.bundles.android.test)
