@@ -14,6 +14,8 @@ sealed class HomeUiEvent(val id: UUID)
 sealed class HomeAction {
     object LoadTodoList : HomeAction()
 
+    object LoadArchives : HomeAction()
+
     data class CompleteItem(val id: UUID) : HomeAction()
 }
 

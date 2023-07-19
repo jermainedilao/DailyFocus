@@ -18,6 +18,5 @@
     <string name="action_cancel">Cancel</string>
     <string name="action_mark_as_done">Mark as done</string>
     <string name="action_unmark_as_done">Unmark as done</string>
-    <string name="title_archive_todos_notification">Starting a new focus day</string>
-    <string name="title_archiver_notification_channel">Archiver</string>
+    <string name="archives">Archives</string>
 </resources>

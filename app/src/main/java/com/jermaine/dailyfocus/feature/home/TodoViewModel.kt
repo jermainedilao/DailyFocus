@@ -11,8 +11,8 @@ import javax.inject.Inject
 
 @ExperimentalCoroutinesApi
 @HiltViewModel
-class HomeViewModel @Inject constructor(
-    interactor: HomeInteractor,
+class TodoViewModel @Inject constructor(
+    interactor: TodoInteractor,
 ) : BaseViewModel<HomeAction, HomeResult, HomeUiState, HomeUiEvent>(interactor),
     DefaultLifecycleObserver {
 

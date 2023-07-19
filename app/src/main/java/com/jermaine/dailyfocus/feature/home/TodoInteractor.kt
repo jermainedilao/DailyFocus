@@ -15,7 +15,7 @@ import java.time.LocalDate
 import javax.inject.Inject
 
 @ExperimentalCoroutinesApi
-class HomeInteractor @Inject constructor(
+class TodoInteractor @Inject constructor(
     private val todoRepository: TodoRepository,
     private val toggleCompleteTodoUseCase: ToggleCompleteTodoUseCase,
 ) : Interactor<HomeAction, HomeResult> {
@@ -23,6 +23,15 @@ class HomeInteractor @Inject constructor(
     private fun subscribeToTodoList(action: HomeAction.LoadTodoList): Flow<HomeResult> {
         return todoRepository
             .observeAll(LocalDate.now())
+            .map(HomeResult::TodoListLoaded)
+            .onStart<HomeResult> {
+                emit(HomeResult.LoadingStarted)
+            }
+    }
+
+    private fun subscribeToArchivesList(action: HomeAction.LoadArchives): Flow<HomeResult> {
+        return todoRepository
+            .observeAll(null)
             .map(HomeResult::TodoListLoaded)
             .onStart<HomeResult> {
                 emit(HomeResult.LoadingStarted)
@@ -41,6 +50,8 @@ class HomeInteractor @Inject constructor(
                 .flatMapLatest(::subscribeToTodoList),
             actions.filterIsInstance<HomeAction.CompleteItem>()
                 .flatMapLatest(::toggleCompletion),
+            actions.filterIsInstance<HomeAction.LoadArchives>()
+                .flatMapLatest(::subscribeToArchivesList),
         )
     }
 }

@@ -17,11 +17,17 @@ import javax.inject.Singleton
 class TodoRepository @Inject constructor(
     private val todoDao: TodoDao,
 ) {
-    fun observeAll(createdAt: LocalDate): Flow<List<TodoModel>> =
+    fun observeAll(createdAt: LocalDate?): Flow<List<TodoModel>> = if (createdAt == null) {
+        todoDao
+            .observeArchives()
+            .distinctUntilChanged()
+            .map { it.map(TodoDbModel::toDomain) }
+    } else {
         todoDao
             .observeAll(createdAt)
             .distinctUntilChanged()
             .map { it.map(TodoDbModel::toDomain) }
+    }
 
     fun observeSingle(id: UUID): Flow<TodoModel> =
         todoDao

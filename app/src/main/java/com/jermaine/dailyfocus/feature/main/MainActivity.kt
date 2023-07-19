@@ -18,11 +18,13 @@ import androidx.navigation.navArgument
 import androidx.navigation.navOptions
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.jermaine.dailyfocus.feature.addtask.AddTaskScreen
+import com.jermaine.dailyfocus.feature.archives.ArchivesScreen
 import com.jermaine.dailyfocus.feature.home.HomeScreen
 import com.jermaine.dailyfocus.feature.onboarding.OnboardingScreen
 import com.jermaine.dailyfocus.ui.theme.DailyFocusTheme
 import com.jermaine.dailyfocus.util.ARGS_ID
 import com.jermaine.dailyfocus.util.NAVIGATION_ADD_TASK
+import com.jermaine.dailyfocus.util.NAVIGATION_ARCHIVES
 import com.jermaine.dailyfocus.util.NAVIGATION_HOME
 import com.jermaine.dailyfocus.util.NAVIGATION_ONBOARDING
 import com.jermaine.dailyfocus.util.PREF_IS_ONBOARDED
@@ -94,7 +96,15 @@ class MainActivity : ComponentActivity() {
                             "$NAVIGATION_ADD_TASK?$ARGS_ID=$it",
                         )
                     },
+                    onViewArchivesClick = {
+                        navController.navigate(NAVIGATION_ARCHIVES)
+                    },
                 )
+            }
+            composable(NAVIGATION_ARCHIVES) {
+                ArchivesScreen {
+                    navController.navigateUp()
+                }
             }
             composable(
                 "$NAVIGATION_ADD_TASK?$ARGS_ID={$ARGS_ID}",

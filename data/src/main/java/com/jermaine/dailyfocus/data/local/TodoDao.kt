@@ -13,6 +13,9 @@ interface TodoDao {
     @Query("SELECT * FROM todo WHERE createdAt = :createdAt ORDER BY due asc")
     fun observeAll(createdAt: LocalDate): Flow<List<TodoDbModel>>
 
+    @Query("SELECT * FROM todo WHERE createdAt < :now ORDER BY due asc")
+    fun observeArchives(now: LocalDate = LocalDate.now()): Flow<List<TodoDbModel>>
+
     @Query("SELECT * FROM todo WHERE uid = :uid")
     suspend fun get(uid: String): TodoDbModel
 
