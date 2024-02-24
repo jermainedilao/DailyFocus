@@ -4,11 +4,21 @@ This is a simple to-do app that I created to practice implementing new technolog
 
 ## Features
 - Onboarding
-
+- Add Task
+- Task List
+- Archives
+- Auto archiving of task list every end of the day
 
 ## Built with
 - Kotlin
 - Jetpack Compose
+- Navigation Compose
+- Coroutines
+- Hilt
+- MVVM + MVI
+- Clean Architecture
+- Room
+- Version Catalogs
 
 
 
